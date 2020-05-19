@@ -115,7 +115,7 @@ public:
                 usedEdges.push_back(usedEdge);
             }
         }
-        cout << "Captured used Edges Endpoints total: " << usedEdges.size() << endl;
+        // cout << "Captured used Edges Endpoints total: " << usedEdges.size() << endl;
 
         return usedEdges; 
     }

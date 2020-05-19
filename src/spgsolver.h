@@ -273,9 +273,9 @@ public:
 	// static void Solve (int argc, char **argv) {
 	static vector<vector<int>> Solve(Graph g, int seedSet, int iter){
 		const uint64_t version = 201706010852;
-		cout << "version " << version << endl
-			<< "precision " << fixed << setprecision(20) << EDGE_COST_PRECISION << endl;
-
+		// cout << "version " << version << endl
+		// 	<< "precision " << fixed << setprecision(20) << EDGE_COST_PRECISION << endl;
+		setprecision(20);
 		// if (argc < 2) ShowUsage();
 		// Graph g;
 		// g.ReadSTP(argv[1]);
@@ -284,7 +284,7 @@ public:
 		char *name = "";//new char[strlen(filename)+1];
 		// ExtractFilename(filename, name); 
 		// OutputGraphStats (stdout, g, argv[1]);
-		fprintf (stdout, "graph %s\n", name);
+		// fprintf (stdout, "graph %s\n", name);
 		EdgeCost bestknown = -1;//ReadBound(stdout, name); 
 		EdgeCost bestfound = INFINITE_COST;
 
@@ -380,8 +380,8 @@ public:
 		if (config.EARLY_STOP_BOUND < 0) {config.EARLY_STOP_BOUND = bestknown;}
 
 		bestfound = primal;
-		config.Output(stdout);
-		fprintf (stdout, "seed %d\n", seed);
+		// config.Output(stdout);
+		// fprintf (stdout, "seed %d\n", seed);
 
 		// if there is a best known solution, output it whenever we find it
 		if (config.OUTPUT_THRESHOLD<0 && bestknown>=0) {
@@ -414,11 +414,11 @@ public:
 
 
 		if (PREPROCESS) {
-			fprintf (stdout, "Should be preprocessing.\n");
+			// fprintf (stdout, "Should be preprocessing.\n");
 			RFWTimer preptime(true);
 			Preprocessing::RunPreprocessing(g, !SAFE_PREPROCESS);
-			fprintf (stdout, "preptime %.6f\n", preptime.getTime());
-			fprintf (stdout, "prepfixed %.6f\n", g.GetFixedCost());
+			// fprintf (stdout, "preptime %.6f\n", preptime.getTime());
+			// fprintf (stdout, "prepfixed %.6f\n", g.GetFixedCost());
 			//PrepBottleneck(g);
 			//exit(-1);
 		}
@@ -427,7 +427,7 @@ public:
 		if (mstype > MS_NUMBER) {
 			GUARDED_MULTISTART = true;
 			mstype = mstype % 10;
-			fprintf (stdout, "Will run guarded mode %d.\n", mstype);
+			// fprintf (stdout, "Will run guarded mode %d.\n", mstype);
 		}
 
 		double second_time = 0;
@@ -436,12 +436,12 @@ public:
 		SteinerSolution bestSolution(&g);
 
 		if (MULTISTART && GUARDED_MULTISTART) {
-			fprintf (stdout, "There are %d threads, %d processes.\n", omp_get_max_threads(), omp_get_num_procs());
+			// fprintf (stdout, "There are %d threads, %d processes.\n", omp_get_max_threads(), omp_get_num_procs());
 
 			GlobalInfo ginfo;
 			ginfo.fixed = g.GetFixedCost();
 			config.DEPTH_LIMIT = 128;
-			fprintf (stdout, "Setting depth limit to %d.\n", config.DEPTH_LIMIT);
+			// fprintf (stdout, "Setting depth limit to %d.\n", config.DEPTH_LIMIT);
 
 
 			omp_set_num_threads(2);
@@ -450,36 +450,36 @@ public:
 			{
 				Graph thread_g = g;
 				EdgeCost thread_bestfound = bestfound;
-				fprintf (stdout, "<%d> ", omp_get_thread_num());
+				// fprintf (stdout, "<%d> ", omp_get_thread_num());
 				if (omp_get_thread_num() == 0) {
 					RunMultistart(thread_g, mstype, msit, thread_bestfound, bestknown, config, name, &ginfo, &executionLog, nullptr);
-					fprintf (stdout, "DONE RUNNING MULTISTART AND FOUND %.3f\n", thread_bestfound);
+					// fprintf (stdout, "DONE RUNNING MULTISTART AND FOUND %.3f\n", thread_bestfound);
 					ginfo.MakeSolved();
 				} else if (omp_get_thread_num() == 1) {
 					RFWTimer stimer(true);
-					fprintf (stdout, "Should be running something smarter here.\n");
+					// fprintf (stdout, "Should be running something smarter here.\n");
 					int bbseed = seed;
 					if (bbseed > 0) bbseed = -bbseed;
 					BranchBound::RunBranchAndBound(thread_g, bbseed, thread_bestfound, thread_bestfound, bestknown, config, &ginfo, &executionLog);
 					second_time += stimer.getTime();
-					fprintf (stdout, "DONE RUNNING BRANCHING-AND-BOUND!\n");
+					// fprintf (stdout, "DONE RUNNING BRANCHING-AND-BOUND!\n");
 					if (!ginfo.bbpruned) ginfo.MakeSolved();
-					else fprintf (stdout, "Did not find the optimal solution, though.\n");
+					// else fprintf (stdout, "Did not find the optimal solution, though.\n");
 				}
 #pragma omp critical 
 				{
 					if (thread_bestfound < bestfound) {
 						bestfound = thread_bestfound;
-						fprintf (stdout, "THREAD %d UPDATED TO %.3f\n", omp_get_thread_num(), bestfound);
+						// fprintf (stdout, "THREAD %d UPDATED TO %.3f\n", omp_get_thread_num(), bestfound);
 					}
 				}
 			}
 #pragma omp barrier
 			{
-				fprintf (stdout, "Done with this.\n");
+				// fprintf (stdout, "Done with this.\n");
 			}
 			first_time = ftimer.getTime();
-			fprintf (stdout, "bbpruned %d\n", ginfo.bbpruned);
+			// fprintf (stdout, "bbpruned %d\n", ginfo.bbpruned);
 			MULTISTART = false;
 			BRANCHBOUND = false;
 		}
@@ -493,9 +493,9 @@ public:
 			int maxit = 10;
 			for (int m=0; m<5; m++) {
 				double besttime = 99999999;
-				fprintf (stdout, "Running %d... ", m); fflush(stdout);
+				// fprintf (stdout, "Running %d... ", m); fflush(stdout);
 				if (m==3) {
-					fprintf (stdout, "WARNING! SKIPPING METHOD 3.\n");
+					// fprintf (stdout, "WARNING! SKIPPING METHOD 3.\n");
 					continue;
 				}
 				//if (m != 2) continue;
@@ -516,8 +516,8 @@ public:
 					double t = timer.getTime();
 					if (t < besttime) besttime = t;
 				}
-				fprintf (stdout, "Method %d found solution of cost %d in %.3f milliseconds (best of %d runs).\n", m, solcost, besttime * 1000.0, maxit);
-				fflush(stdout);
+				// fprintf (stdout, "Method %d found solution of cost %d in %.3f milliseconds (best of %d runs).\n", m, solcost, besttime * 1000.0, maxit);
+				// fflush(stdout);
 			}
 		}
 
@@ -525,65 +525,65 @@ public:
 			BranchBound::RunBranchAndBound(g, seed, primal, bestfound, bestknown, config, NULL, &executionLog);
 		}
 		double walltime = timer.getTime();
-		fprintf (stdout, "totalwalltimeseconds %.12f\n", walltime);
+		// fprintf (stdout, "totalwalltimeseconds %.12f\n", walltime);
 		//fprintf (stdout, "totaltimeseconds %.12f\n", walltime + second_time);
 		//fprintf (stdout, "bestsolution %.0f\n", bestfound);
 
-		Basics::ReportResults(stdout, "total", walltime + first_time, bestfound, bestknown);
-		Basics::ReportResults(stdout, "totalcpu", walltime + second_time, bestfound, bestknown);
+		// Basics::ReportResults(stdout, "total", walltime + first_time, bestfound, bestknown);
+		// Basics::ReportResults(stdout, "totalcpu", walltime + second_time, bestfound, bestknown);
 
 		// Dump official output logs.
-		if (!config.LOG_FILENAME.empty()) {
-			ofstream logFile(config.LOG_FILENAME.c_str());
-			if (logFile.is_open()) {
-				logFile << "SECTION Comment" << endl
-					<< "Name \"" << name << "\"" << endl
-					<< "Problem \"SPG\"" << endl
-					<< "Program \"puw\"" << endl
-					<< "Version \"" << version << "\"" << endl
-					<< "End" << endl
-					<< endl
-					<< "SECTION Solutions" << endl;
-				for (size_t i = 0; i < executionLog.solCost.size(); ++i) {
-					logFile << "Solution " << fixed << executionLog.solCost[i].second << " " << fixed << executionLog.solCost[i].first << endl;
-				}
-				logFile << "End" << endl
-					<< endl
-					<< "SECTION Run" << endl
-					<< "Threads 1" << endl
-					<< "Time " << fixed << walltime << endl
-					<< "Dual 0" << endl;
-				if (executionLog.solCost.empty())
-					logFile << "Primal inf" << endl;
-				else
-					logFile << "Primal " << fixed << executionLog.bestSolution.GetCost() << endl;
-				logFile << "End" << endl
-					<< endl;
+		// if (!config.LOG_FILENAME.empty()) {
+		// 	ofstream logFile(config.LOG_FILENAME.c_str());
+		// 	if (logFile.is_open()) {
+		// 		logFile << "SECTION Comment" << endl
+		// 			<< "Name \"" << name << "\"" << endl
+		// 			<< "Problem \"SPG\"" << endl
+		// 			<< "Program \"puw\"" << endl
+		// 			<< "Version \"" << version << "\"" << endl
+		// 			<< "End" << endl
+		// 			<< endl
+		// 			<< "SECTION Solutions" << endl;
+		// 		for (size_t i = 0; i < executionLog.solCost.size(); ++i) {
+		// 			logFile << "Solution " << fixed << executionLog.solCost[i].second << " " << fixed << executionLog.solCost[i].first << endl;
+		// 		}
+		// 		logFile << "End" << endl
+		// 			<< endl
+		// 			<< "SECTION Run" << endl
+		// 			<< "Threads 1" << endl
+		// 			<< "Time " << fixed << walltime << endl
+		// 			<< "Dual 0" << endl;
+		// 		if (executionLog.solCost.empty())
+		// 			logFile << "Primal inf" << endl;
+		// 		else
+		// 			logFile << "Primal " << fixed << executionLog.bestSolution.GetCost() << endl;
+		// 		logFile << "End" << endl
+		// 			<< endl;
 
-				if (!executionLog.solCost.empty()) {
-					logFile << "SECTION Finalsolution" << endl;
+		// 		if (!executionLog.solCost.empty()) {
+		// 			logFile << "SECTION Finalsolution" << endl;
 
-					size_t numVertices = 0;
-					for (int v = 1; v <= g.VertexCount(); ++v) {
-						if (executionLog.bestSolution.GetDegree(v) > 0 || g.IsTerminal(v))
-							++numVertices;
-					}
-					logFile << "Vertices " << numVertices << endl;
-					for (int v = 1; v <= g.VertexCount(); ++v) {
-						if (executionLog.bestSolution.GetDegree(v) > 0 || g.IsTerminal(v))
-							logFile << "V " << v << endl;
-					}
-					logFile << "Edges " << executionLog.bestSolution.EdgeCount() << endl;
-					for (size_t e = 1; e <= g.EdgeCount(); ++e) {
-						if (executionLog.bestSolution.Contains(e))
-							logFile << "E " << g.GetFirstEndpoint(e) << " " << g.GetSecondEndpoint(e) << endl;
-					}
-					logFile << "End" << endl;
-				}
- 				logFile.close();
-			}
-		}
-        executionLog.bestSolution.Output("steinerSolu.txt");
+		// 			size_t numVertices = 0;
+		// 			for (int v = 1; v <= g.VertexCount(); ++v) {
+		// 				if (executionLog.bestSolution.GetDegree(v) > 0 || g.IsTerminal(v))
+		// 					++numVertices;
+		// 			}
+		// 			logFile << "Vertices " << numVertices << endl;
+		// 			for (int v = 1; v <= g.VertexCount(); ++v) {
+		// 				if (executionLog.bestSolution.GetDegree(v) > 0 || g.IsTerminal(v))
+		// 					logFile << "V " << v << endl;
+		// 			}
+		// 			logFile << "Edges " << executionLog.bestSolution.EdgeCount() << endl;
+		// 			for (size_t e = 1; e <= g.EdgeCount(); ++e) {
+		// 				if (executionLog.bestSolution.Contains(e))
+		// 					logFile << "E " << g.GetFirstEndpoint(e) << " " << g.GetSecondEndpoint(e) << endl;
+		// 			}
+		// 			logFile << "End" << endl;
+		// 		}
+ 		// 		logFile.close();
+		// 	}
+		// }
+        // executionLog.bestSolution.Output("steinerSolu.txt");
 
 		return executionLog.bestSolution.GetUsedEdges();
 	}
