@@ -21,6 +21,8 @@
 #include <stack>
 #include <dirent.h>
 #include <ostream>
+#include <chrono>
+#include <queue> 
 #include "./src/spgsolver.h"
 #include "./src/graph.h"
 
@@ -51,12 +53,15 @@ public:
     int V,E;
     // list<int> *adj; // adjacent list
     Grafo(string path); // constructor
-    void solve(int seed, int iter);
+    double solvePrim(int seed, int iter);
+    double solveLuidi(int seed, int iter);
     void printGraph();
-    Edge getEdge(int id);
+    Edge* getEdge(int id);
+    Edge* getEdge(int vertex_a, int vertex_b);
     vector<vector<int>*> getTerminalGroup(int pos);
     int getSolutionCost();
     bool isFeasible();
+
 private:
     vector<vector<int>*> * terminals;
     vector<vector<int>*> * adj;
@@ -71,10 +76,16 @@ private:
     void useEdge(Edge * e);
     void unUseEdge(Edge * e);
     void solveSteinerTrees(int seed, int iter);
+
     void createSteinerTrees();
+
     vector<int>* addTerminalGroup();
     vector<vector<Edge*>*>* getConnectedComponents();
     void removeCiclesWithPrim(vector<vector<Edge*>*>* components);
+    
+    vector<Edge*> * connectTwoVertexDijkstra(int vertex_source, int vertex_dest);
+    int minDistance(vector<int> dist, vector<bool> sptSet);  
+    void addToPath(vector<int> parent, int j, vector<Edge*>* usedEdgesOnPath);
 };
 
 #endif

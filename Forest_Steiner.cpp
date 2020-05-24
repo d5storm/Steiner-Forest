@@ -20,6 +20,18 @@ vector<string> split(string str, char delimiter) {
   return internal;
 }
 
+Edge * Grafo::getEdge(int vertex_a, int vertex_b){
+    // cout << "Looking for Edge with: " << vertex_a << " and " << vertex_b << endl;
+    for(int e = 0; e < edges->size(); e++){
+        Edge * edge = edges->at(e);
+        if(edge->vertex_a == vertex_a && edge->vertex_b == vertex_b)
+            return edge;
+        if(edge->vertex_b == vertex_a && edge->vertex_a == vertex_b)
+            return edge;
+    }
+    return NULL;
+}
+
 Grafo::Grafo(string path){
     std::ifstream file;
     file.open(path, std::ifstream::in);
@@ -80,11 +92,10 @@ void Grafo::solveSteinerTrees(int seed, int iter){
     for(unsigned int st = 0; st < treeGraphs->size(); st++){
         // cout << "Graph Memory: " << treeGraphs->at(st) << endl;
         // cout << "Solving this... " << endl;
-        // for(int e = 0; e < treeGraphs->at(st).EdgeCount(); e++){
+        // for(int e = 0; e <= treeGraphs->at(st).EdgeCount(); e++){
         //     cout << treeGraphs->at(st).GetFirstEndpoint(e) << " " << treeGraphs->at(st).GetSecondEndpoint(e) << " " << treeGraphs->at(st).GetCost(e) << endl;
         // }
         vector<vector<int>> usedEdges = SPGSolver::Solve(treeGraphs->at(st), seed, iter);
-        // SPGSolver::Solve(treeGraphs->at(st), 0, 100);
         // cout << "Solved Steiner Tree: " << st << endl;
         // cin.get();
         for(unsigned int e = 0; e < usedEdges.size(); e++){
@@ -110,6 +121,99 @@ void Grafo::solveSteinerTrees(int seed, int iter){
         // printGraph();
         // cin.get();
     }
+}
+
+void Grafo::addToPath(vector<int> parent, int j, vector<Edge*>* usedEdgesOnPath){
+    if (parent[j] >= 0){
+        addToPath(parent, parent[j], usedEdgesOnPath); 
+        Edge * edge = getEdge(j, parent[j]);
+        usedEdgesOnPath->push_back(edge);
+    }
+
+}
+
+
+int Grafo::minDistance(vector<int> dist, vector<bool> sptSet) 
+{ 
+      
+    // Initialize min value 
+    int min = INT_MAX, min_index; 
+  
+    for (int v = 0; v < V; v++) 
+        if (sptSet[v] == false && 
+                   dist[v] <= min) 
+            min = dist[v], min_index = v; 
+  
+    return min_index; 
+} 
+
+vector<Edge*> * Grafo::connectTwoVertexDijkstra(int vertex_source, int vertex_dest){
+    vector<int> dist(V);  
+    vector<bool> sptSet(V); 
+
+    vector<int> parent(V); 
+  
+    for (int i = 0; i < V; i++) 
+    { 
+        parent[0] = -1; 
+        dist[i] = INT_MAX; 
+        sptSet[i] = false; 
+    } 
+
+    dist[vertex_source] = 0; 
+  
+    // Find shortest path 
+    // for all vertices 
+    for (int count = 0; count < V - 1; count++) 
+    { 
+        // Pick the minimum distance 
+        // vertex from the set of 
+        // vertices not yet processed.  
+        // u is always equal to src 
+        // in first iteration. 
+        int u = minDistance(dist, sptSet); 
+  
+        // Mark the picked vertex  
+        // as processed 
+        sptSet[u] = true; 
+  
+        // Update dist value of the  
+        // adjacent vertices of the 
+        // picked vertex. 
+        for (int v = 0; v < V; v++){ 
+  
+            // Update dist[v] only if is 
+            // not in sptSet, there is 
+            // an edge from u to v, and  
+            // total weight of path from 
+            // src to v through u is smaller 
+            // than current value of 
+            // dist[v] 
+            if (!sptSet[v] && adj->at(u)->at(v) && 
+                dist[u] + adj->at(u)->at(v) < dist[v]) 
+            { 
+                parent[v] = u; 
+                dist[v] = dist[u] + adj->at(u)->at(v); 
+            }  
+        }
+    } 
+    
+    vector<Edge*> * path = new vector<Edge*>();
+    addToPath(parent, vertex_dest, path);
+
+    // cout << "Path: " << path->size() << endl;
+    // for (int v = 0; v < path->size(); v++){ 
+    //     cout << "(" << path->at(v)->vertex_a << "," << path->at(v)->vertex_b << ") ";
+    // }
+    // cout << endl;
+    // print the constructed 
+    // distance array 
+    // printSolution(dist, V, parent); 
+    return path;
+}
+
+void solveLuidi(int seed, int iter){
+
 }
 
 void Grafo::createSteinerTrees(){
@@ -181,9 +285,9 @@ void Grafo::printGraph(){
     }
 
     cout << "Used Edges:" << endl;
-    for(unsigned int i = 0; i < usedEdges->size(); i++){
-        // if(edges->at(i).usedEdge)
-            cout << "(" << usedEdges->at(i)->vertex_a << "," << usedEdges->at(i)->vertex_b << ") "; 
+    for(unsigned int i = 0; i < edges->size(); i++){
+        if(edges->at(i)->usedEdge)
+            cout << "(" << edges->at(i)->vertex_a << "," << edges->at(i)->vertex_b << ") "; 
     }
     cout << endl;
 
@@ -200,13 +304,17 @@ void Grafo::printGraph(){
 }
 
 void Grafo::useEdge(int e){
-    edges->at(e)->useEdge();
-    usedEdges->push_back(edges->at(e));
+    if(!edges->at(e)->usedEdge){
+        edges->at(e)->useEdge();
+        usedEdges->push_back(edges->at(e));
+    }
 }
 
 void Grafo::useEdge(Edge * e){
-    e->unUseEdge();
-    usedEdges->push_back(e);
+    if(!e->usedEdge){
+        e->unUseEdge();
+        usedEdges->push_back(e);
+    }
 }
 
 void Grafo::unUseEdge(int e){
@@ -304,6 +412,7 @@ vector<vector<Edge*>*>* Grafo::getConnectedComponents(){
         // cout << "TotalUsedEdges: " << availableEdges->size() << endl;
         // cin.get();
     }
+    // cin.get();
     return components;
 }
 
@@ -480,15 +589,20 @@ int Grafo::getSolutionCost(){
     return cost;
 }
 
-void Grafo::solve(int seed, int iter){
-    
+double Grafo::solvePrim(int seed, int iter){
+    auto start = std::chrono::system_clock::now();
     createSteinerTrees();
     solveSteinerTrees(seed, iter);
     // printGraph();
+    // cin.get();
     vector<vector<Edge*>*>* components = getConnectedComponents();
     removeCiclesWithPrim(components);
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
     printGraph();
-    // cin.get();
+    cin.get();
+    return (double)elapsed_seconds.count();
+    
 }
     
 void Grafo::addEdge(int vertex_a, int vertex_b, double weight){ 

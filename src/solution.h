@@ -90,6 +90,13 @@ public:
             g->GetEndpoints(e, v, w);
             fprintf (file, "e %d %d %.0f\n", v, w, g->GetCost(e));
         }
+        fprintf (file, "t ");
+        for (int v = 1; v<=g->VertexCount(); v++) {
+            if(g->IsTerminal(v)){
+                fprintf (file, "%d ", v);
+            }
+        }
+        fprintf (file, "\n");
         fprintf (stderr, "done.\n");
     }
 
