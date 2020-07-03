@@ -271,7 +271,7 @@ public:
 	}
 
 	// static void Solve (int argc, char **argv) {
-	static vector<vector<int>> Solve(Graph g, int seedSet, int iter){
+	static vector<vector<int>> Solve(Graph g, RFWLocalRandom * random, int seed, int iter){
 		const uint64_t version = 201706010852;
 		// cout << "version " << version << endl
 		// 	<< "precision " << fixed << setprecision(20) << EDGE_COST_PRECISION << endl;
@@ -302,7 +302,7 @@ public:
 		int mstype = MS_COMBINATION;
 		int msit = iter;
 
-		int seed = seedSet;
+		// int seed = seedSet;
 		EdgeCost primal = INFINITE_COST;
 
 		//fprintf (stdout, "ARGC is %d\n", argc);
@@ -395,7 +395,7 @@ public:
 
 		MULTISTART = (msit != 0);
 
-		RFWRandom::randomize(seed);
+		// RFWRandom::randomize(seed);
 
 
 		bool APPLY_PERTURBATION = false;
@@ -403,8 +403,8 @@ public:
 			fprintf (stdout, "Applying perturbation... ");
 			int m = g.EdgeCount();
 			vector<EdgeCost> pertcost (m+1,-1);
-			RFWLocalRandom random(seed+17);
-			PerturbationTools::ApplyPerturbation(g, pertcost, random, 1, 1.0001);
+			// RFWLocalRandom random(seed+17);
+			PerturbationTools::ApplyPerturbation(g, pertcost, *random, 1, 1.0001);
 			g.ApplyCosts(pertcost);
 			for (int i=1; i<std::min(10, m); i++) {
 				fprintf (stdout, "%.5f ", (double)g.GetCost(i));

@@ -25,26 +25,60 @@
 #include <queue> 
 #include "./src/spgsolver.h"
 #include "./src/graph.h"
+#include "./src/rfw_random.h"
 
 
 using namespace std;
 
 
+
 class Edge
 {
     public:
+        int id;
         int vertex_a, vertex_b;
         double weight;
+        double tempWeight;
         bool usedEdge;
-    Edge(int vertex_a, int vertex_b, double weight){
+        int appearance;
+    Edge(int id, int vertex_a, int vertex_b, double weight){
+        this->id = id;
         usedEdge = false;
         this->vertex_a = vertex_a;
         this->vertex_b = vertex_b;
         this->weight = weight;
+        this->tempWeight = weight;
+        this->appearance = 0;
     }
 
-    void useEdge(){this->usedEdge = true;}
-    void unUseEdge(){this->usedEdge = false;}
+    void useEdge(){
+        this->usedEdge = true;
+        this->appearance++;
+    }
+    void forceUnUseEdge(){ 
+        this->appearance = 0;
+        this->usedEdge = false;
+    }
+    void unUseEdge(){
+        if(this->appearance == 1){
+            this->appearance = 0;
+            this->usedEdge = false;
+        } else if(this->appearance > 1)
+            this->appearance--;
+    }
+};
+
+class Nugget
+{
+    public:
+        int vertex_a, vertex_b;
+        vector<Edge*> * pathEdges;
+
+    Nugget(int vertex_a, int vertex_b, vector<Edge*> * pathEdges){
+        this->vertex_a = vertex_a;
+        this->vertex_b = vertex_b;
+        this->pathEdges= pathEdges;
+    }
 };
 
 class Grafo
@@ -53,37 +87,53 @@ public:
     int V,E;
     // list<int> *adj; // adjacent list
     Grafo(string path); // constructor
-    double solvePrim(int seed, int iter);
-    double solveLuidi(int seed, int iter);
+    double solvePrim(RFWLocalRandom * random, int seed, int iter);
+    double solveLuidi(RFWLocalRandom * random);
     void printGraph();
     Edge* getEdge(int id);
     Edge* getEdge(int vertex_a, int vertex_b);
     vector<vector<int>*> getTerminalGroup(int pos);
     int getSolutionCost();
-    bool isFeasible();
-
+    bool isFeasible(){
+        return detectCicle() && checkTerminalsMeet()?true:false;
+    }
 private:
+
+    bool detectCicle();
+    bool DFS(int start, int father, vector<int> * visited);
+    bool checkTerminalsMeet();
+
+    vector<Nugget*> * solution;
     vector<vector<int>*> * terminals;
     vector<vector<int>*> * adj;
+    vector<vector<int>*> * steinerForest;
     vector<Edge*>* edges;
     vector<Edge*>* usedEdges;
     vector<Graph> * treeGraphs;
-    void detectCicle();
-    void checkTerminalsMeet();
-    void addEdge(int vertex_a, int vertex_b, double weight);
+
+    bool relocateLocalSearch();
+
+
+    void pushNugget(int vertex_a, int vertex_b, vector<Edge*> * path);
+    void insertNugget(int pos, int vertex_a, int vertex_b, vector<Edge*> * path);
+    Nugget * removeNugget(int pos);
+    void createSteinerForestAdj();
+    void clearSteinerForestAdj();
+    void addEdge(int id, int vertex_a, int vertex_b, double weight);
     void useEdge(int e);
     void unUseEdge(int e);
     void useEdge(Edge * e);
     void unUseEdge(Edge * e);
-    void solveSteinerTrees(int seed, int iter);
+    void solveSteinerTrees(RFWLocalRandom * random, int seed, int iter);
 
-    void createSteinerTrees();
+    void createSteinerTrees(int t);
 
     vector<int>* addTerminalGroup();
     vector<vector<Edge*>*>* getConnectedComponents();
     void removeCiclesWithPrim(vector<vector<Edge*>*>* components);
     
-    vector<Edge*> * connectTwoVertexDijkstra(int vertex_source, int vertex_dest);
+    void solveByPath(RFWLocalRandom * random);
+    vector<Edge*> * connectTwoVertexDijkstra(int vertex_source, int vertex_dest, vector<vector<int>*> * matrix);
     int minDistance(vector<int> dist, vector<bool> sptSet);  
     void addToPath(vector<int> parent, int j, vector<Edge*>* usedEdgesOnPath);
 };

@@ -16,27 +16,31 @@ function CTRLC {
 
 
 execpath="./bin/heuristic"
-instances="./Instances/"
-dat=".dat"
-# declare -a wkf=("CyberShake_30.xml" "CyberShake_50.xml")
-# declare -a times=("3" "3")
-# declare -a wkf=("GENOME.d.702049732.0.dax" "Montage_25.xml" "Montage_50.xml" "Montage_100.xml" "Inspiral_30.xml" "Inspiral_50.xml" "Inspiral_100.xml")
-# declare -a times=("2245" "2665" "2746" "3355" "3382" "3490" "4021")
-declare -a forest=("jmp-n-25-a-160-p-025-k-2-s-4711" "jmp-n-50-a-160-p-025-k-5-s-4731" "jmp-n-50-a-200-p-025-k-5-s-4781" "jmp-n-100-a-200-p-025-k-5-s-4786"
-                   "jmp-n-100-a-200-p-025-k-10-s-4791" "jmp-n-100-a-200-p-050-k-15-s-4911" "jmp-n-500-a-200-p-025-k-35-s-5192" "jmp-n-500-a-200-p-050-k-50-s-5226")
-declare -a uchoaIter=(100)
+instances=./Instances/sergio/*
+declare -a uchoaIter=(1)
+declare -a algIter=(10)
+declare -a execTime=("0.4068" "0.7283" "6.0801" "9.1492" "18.5216" "0.4252" "0.9441" "8.3798" "11.7800" "24.6800" "0.8983" "0.0061" "0.0117" "0.0289" "0.8640" "0.6594" "1.5197" "0.0435" "0.1620" "0.2041" "18.2593" "34.0608")
+
+
+
 trap CTRLC SIGINT
 
-## now loop through the above array
-for i in "${uchoaIter[@]}"
+timePos=0
+for file in $instances
 do
-	for file in "${forest[@]}"
+    for u in "${uchoaIter[@]}"
 	do
-		for ((  s = 1 ;  s <= 10;  s++  )) 
-		do	
-			EXEC $execpath $instances$file$dat $s $i
-		done
-		time=$((time+1))			
+		for i in "${algIter[@]}"
+		do
+			for ((  s = 1 ;  s <= 10;  s++  )) 
+			do	
+				value=${execTime[timePos]}
+				# echo $value
+				EXEC $execpath $file $s $i $u -1 #>> ./results/luidi/luidi_sergio_time_2.txt
+			done
+		done		
 	done
+	((timePos=timePos+1))
 done
+
 
