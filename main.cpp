@@ -1,27 +1,43 @@
 #include "Forest_Steiner.hpp"
 
+bool checkTime(bool useTime, double currentTime, double maxTime){
+    if(!useTime)
+        return true;
+    if(currentTime <= maxTime){
+        return true;
+    }
+    return false;
+}
+
+bool checkiter(bool useIter, double currentIter, double maxIter){
+    if(!useIter)
+        return true;
+    if(currentIter < maxIter){
+        return true;
+    }
+    return false;
+}
+
 int main(int argc, char *argv[]) {
 
-    // cout << "leu" << endl;
     int seed = stoi(argv[2]);
     RFWRandom::randomize(seed);
     RFWLocalRandom * random = new RFWLocalRandom(seed);
     int algIter = stoi(argv[3]);
     int uchoaIter = stoi(argv[4]);
-    // cout << "leu" << endl;
     double execTime = stod(argv[5]);
-
+    bool useIter = true;
+    bool useTime = true;
     if(execTime == -1)
-        execTime = INT64_MAX;
-    if(algIter == -1)
-        algIter = INT64_MAX;
-    // cout << "ExecTime: " << execTime << endl;
-    
-    // cout << "algiter: " << algIter << " uchoaITer: " << uchoaIter << endl;
+        useTime = false;
+    else if(algIter == -1)
+        useIter = false;
+
     int bestSol = 99999999999999;
     double totalTime = 0.0;
     int iter = 0;
-    while(totalTime <= execTime && iter < algIter){
+    Grafo * best = new Grafo(argv[1]);
+    while(checkTime(useTime, totalTime, execTime) && checkiter(useIter, iter, algIter)){
         // cout << totalTime << endl;
         Grafo * testLuidi = new Grafo(argv[1]);
         // Grafo * testSergio = new Grafo(argv[1]);
@@ -37,20 +53,24 @@ int main(int argc, char *argv[]) {
         // }
         // cout << "New Solution Cost: " << testLuidi->getSolutionCost() << endl;
         // cin.get();
-        testLuidi->printGraph();
-        cin.get();
+        // testLuidi->printGraph();
+        // cin.get();
         if(testLuidi->getSolutionCost() < bestSol){
             bestSol = testLuidi->getSolutionCost();
+            delete best;
+            best = testLuidi;
+
+        } else{
+            delete testLuidi;
         }
         // if(testSergio->getSolutionCost() < bestSol){
         //     bestSol = testSergio->getSolutionCost();
         // }
         // delete testSergio;
-        delete testLuidi;
         iter++;
     }
     
-    // testLuidi->printGraph();
+    best->printGraph();
     
     
     // cout << "CostLuidi: " << testLuidi->getSolutionCost() << " LuidiTime: " << execTimeLuidi << " Seed: " << seed << endl;

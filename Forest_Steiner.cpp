@@ -434,6 +434,11 @@ bool Grafo::relocateLocalSearch(){
         }
         delete nugget->pathEdges;
         nugget->pathEdges = bestPath;
+
+        if(!this->isFeasible()){
+            cout << "Luidi UnFeasible! LOCALSEARCH" << endl;
+            exit(-1);
+        }
         // printGraph();
         // cin.get();
         return true;
@@ -448,10 +453,10 @@ double Grafo::solveLuidi(RFWLocalRandom * random){
     // cout << "Cost: " << this->getSolutionCost() << endl;
     bool BLimproved = true;
     int BLITers = 0;
-    // while(BLimproved){
-    //     BLimproved = relocateLocalSearch();
-    //     BLITers++;
-    // }
+    while(BLimproved){
+        BLimproved = relocateLocalSearch();
+        BLITers++;
+    }
     // cout << "BLIters: " << BLITers << endl;
     // cout << "Cost: " << this->getSolutionCost() << endl;
     // cin.get();
@@ -582,6 +587,22 @@ void Grafo::printGraph(){
         cout << endl;
     }
     cout << "Cost: " << getSolutionCost() << endl;
+
+    cout << "\n******************GRAPHVIZ******************" << endl;
+    vector<string> colors = {"red", "blue", "yellow", "purple", "brown", "green"};
+
+    for(unsigned int i = 0; i < edges->size(); i++){
+        // if(edges->at(i)->usedEdge){
+            cout << edges->at(i)->vertex_a << " -- " << edges->at(i)->vertex_b << " [label=\"" <<  edges->at(i)->weight << "\"]"  << ";" << endl; 
+        // }
+    }
+    for(unsigned int t = 0; t < terminals->size(); t++){
+        for(unsigned int t1 = 0; t1 < terminals->at(t)->size(); t1++){
+            cout << terminals->at(t)->at(t1) << " [color=" << colors[t] << "];" << endl;
+        }
+    }
+
+    cout << endl;
 }
 
 void Grafo::useEdge(int e){
