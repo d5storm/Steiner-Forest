@@ -37,6 +37,8 @@ int main(int argc, char *argv[]) {
     double totalTime = 0.0;
     int iter = 0;
     Grafo * best = new Grafo(argv[1]);
+    cout << argv[1];
+    int iterBestFound = -1;
     while(checkTime(useTime, totalTime, execTime) && checkiter(useIter, iter, algIter)){
         // cout << totalTime << endl;
         Grafo * testLuidi = new Grafo(argv[1]);
@@ -59,7 +61,7 @@ int main(int argc, char *argv[]) {
             bestSol = testLuidi->getSolutionCost();
             delete best;
             best = testLuidi;
-
+            iterBestFound = iter;
         } else{
             delete testLuidi;
         }
@@ -70,11 +72,11 @@ int main(int argc, char *argv[]) {
         iter++;
     }
     
-    best->printGraph();
+    // best->printGraph();
     
     
     // cout << "CostLuidi: " << testLuidi->getSolutionCost() << " LuidiTime: " << execTimeLuidi << " Seed: " << seed << endl;
-    cout << argv[1] << " " << bestSol << " " << totalTime << endl;
+    cout << " " << iterBestFound << " " << bestSol << " " << totalTime << endl;
     // cin.get();
     // cout << test->getSolutionCost() << " " << execTime << endl;
     return 1;

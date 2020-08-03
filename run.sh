@@ -36,7 +36,7 @@ do
 			do	
 				value=${execTime[timePos]}
 				# echo $value
-				EXEC $execpath $file $s $i $u -1 #>> ./results/luidi/luidi_200_iter_local_search_1.txt
+				EXEC $execpath $file $s $i $u -1 >> ./results/luidi/list_c3_200_iter_bl.txt
 			done
 		done		
 	done

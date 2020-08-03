@@ -72,12 +72,12 @@ class Nugget
 {
     public:
         int vertex_a, vertex_b;
-        vector<Edge*> * pathEdges;
+        list<Edge*> * pathEdges;
 
-    Nugget(int vertex_a, int vertex_b, vector<Edge*> * pathEdges){
+    Nugget(int vertex_a, int vertex_b, list<Edge*> * pathEdges){
         this->vertex_a = vertex_a;
         this->vertex_b = vertex_b;
-        this->pathEdges= pathEdges;
+        this->pathEdges = pathEdges;
     }
 };
 
@@ -103,19 +103,19 @@ private:
     bool DFS(int start, int father, vector<int> * visited);
     bool checkTerminalsMeet();
 
-    vector<Nugget*> * solution;
+    list<Nugget*> * solution;
     vector<vector<int>*> * terminals;
     vector<vector<int>*> * adj;
     vector<vector<int>*> * steinerForest;
     vector<Edge*>* edges;
-    vector<Edge*>* usedEdges;
+    list<Edge*>* usedEdges;
     vector<Graph> * treeGraphs;
 
     bool relocateLocalSearch();
 
 
-    void pushNugget(int vertex_a, int vertex_b, vector<Edge*> * path);
-    void insertNugget(int pos, int vertex_a, int vertex_b, vector<Edge*> * path);
+    void pushNugget(int vertex_a, int vertex_b, list<Edge*> * path);
+    void insertNugget(int pos, int vertex_a, int vertex_b, list<Edge*> * path);
     Nugget * removeNugget(int pos);
     void createSteinerForestAdj();
     void clearSteinerForestAdj();
@@ -124,18 +124,16 @@ private:
     void unUseEdge(int e);
     void useEdge(Edge * e);
     void unUseEdge(Edge * e);
-    void solveSteinerTrees(RFWLocalRandom * random, int seed, int iter);
 
-    void createSteinerTrees(int t);
 
     vector<int>* addTerminalGroup();
     vector<vector<Edge*>*>* getConnectedComponents();
     void removeCiclesWithPrim(vector<vector<Edge*>*>* components);
     
     void solveByPath(RFWLocalRandom * random);
-    vector<Edge*> * connectTwoVertexDijkstra(int vertex_source, int vertex_dest, vector<vector<int>*> * matrix);
+    list<Edge*> * connectTwoVertexDijkstra(int vertex_source, int vertex_dest, vector<vector<int>*> * matrix);
     int minDistance(vector<int> dist, vector<bool> sptSet);  
-    void addToPath(vector<int> parent, int j, vector<Edge*>* usedEdgesOnPath);
+    void addToPath(vector<int> parent, int j, list<Edge*>* usedEdgesOnPath);
 };
 
 #endif

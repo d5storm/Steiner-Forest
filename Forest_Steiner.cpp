@@ -8,6 +8,8 @@
 
 #include "Forest_Steiner.hpp"
 
+using namespace std;
+
 vector<string> split(string str, char delimiter) {
   vector<string> internal;
   stringstream ss(str); // Turn the string into a stream.
@@ -41,7 +43,7 @@ Grafo::Grafo(string path){
     getline(file, line);
 
     int nVertex = stoi(split(line, ' ')[1]);
-    this->solution = new vector<Nugget*>();
+    this->solution = new list<Nugget*>();
     this->V = nVertex; // atribui o número de vértices
     // adj = new list<int>[V]; // cria as listas
     this->adj = new vector<vector<int>*>();
@@ -58,7 +60,7 @@ Grafo::Grafo(string path){
     }
     this->terminals = new vector<vector<int>*>();
     this->edges = new vector<Edge*>();
-    this->usedEdges = new vector<Edge*>();
+    this->usedEdges = new list<Edge*>();
     this->treeGraphs = new vector<Graph>();
     // cout << "nVertex: " << nVertex << endl;
 
@@ -100,43 +102,8 @@ vector<int>* Grafo::addTerminalGroup(){
     return terminals->back();
 }
 
-void Grafo::solveSteinerTrees(RFWLocalRandom * random,int seed, int iter){
-    // for(unsigned int st = 0; st < treeGraphs->size(); st++){
-        // cout << "Graph Memory: " << treeGraphs->at(st) << endl;
-        // cout << "Solving this... " << endl;
-        // for(int e = 0; e <= treeGraphs->back().EdgeCount(); e++){
-        //     cout << treeGraphs->back().GetFirstEndpoint(e) - 1 << " " << treeGraphs->back().GetSecondEndpoint(e) - 1 << " " << treeGraphs->back().GetCost(e) << endl;
-        // }
-        // cin.get();
-        vector<vector<int>> usedEdges = SPGSolver::Solve(treeGraphs->back(), random, seed, iter);
-        // cout << "Solved Steiner Tree: " << st << endl;
-        // cin.get();
-        for(unsigned int e = 0; e < usedEdges.size(); e++){
-            int vertex_a = usedEdges.at(e).at(0);
-            int vertex_b = usedEdges.at(e).at(1);
-            // cout << "vertex_a: " << vertex_a << " vertex_b: " << vertex_b << endl;
-            // cin.get();
-            for(unsigned int a = 0; a < edges->size(); a++){
-                // cout << "Edge: " << a << " vertex_a: " << edges->at(a).vertex_a << " vertex_b: " << edges->at(a).vertex_b << endl;
-                int my_vertex_a = edges->at(a)->vertex_a + 1;
-                int my_vertex_b = edges->at(a)->vertex_b + 1;
-                // cout << "Edge: " << a << " vertex_a: " << my_vertex_a << " vertex_b: " << my_vertex_b << endl;
-                // cin.get();
-                if((my_vertex_a == vertex_a && my_vertex_b == vertex_b) || (my_vertex_a == vertex_b && my_vertex_b == vertex_a)){
-                    // cout << "Usou a edge!" << endl;
-                    useEdge(a);
-                    // edges->at(a).useEdge();
-                    break;
-                }
-            }
-        }
-        // cout << "Added Steiner edges:" << endl;
-        // printGraph();
-        // cin.get();
-    // }
-}
 
-void Grafo::addToPath(vector<int> parent, int j, vector<Edge*>* usedEdgesOnPath){
+void Grafo::addToPath(vector<int> parent, int j, list<Edge*>* usedEdgesOnPath){
     if(parent[j] < 0) return;
     
     addToPath(parent, parent[j], usedEdgesOnPath);
@@ -160,7 +127,7 @@ int Grafo::minDistance(vector<int> dist, vector<bool> sptSet)
     return min_index; 
 } 
 
-vector<Edge*> * Grafo::connectTwoVertexDijkstra(int vertex_source, int vertex_dest, vector<vector<int>*> * matrix){
+list<Edge*> * Grafo::connectTwoVertexDijkstra(int vertex_source, int vertex_dest, vector<vector<int>*> * matrix){
     
 
     vector<int> dist(V);  
@@ -225,7 +192,7 @@ vector<Edge*> * Grafo::connectTwoVertexDijkstra(int vertex_source, int vertex_de
     //     cout << dist[v] << " ";
     // }
     // cout << endl; cin.get();
-    vector<Edge*> * path = new vector<Edge*>();
+    list<Edge*> * path = new list<Edge*>();
     if(dist[vertex_dest] == 99999999) {cout << "NO PATH from: " << vertex_source << " to: " << vertex_dest << endl; return path;}
 
     
@@ -243,65 +210,78 @@ vector<Edge*> * Grafo::connectTwoVertexDijkstra(int vertex_source, int vertex_de
     return path;
 }
 
-void Grafo::pushNugget(int vertex_a, int vertex_b, vector<Edge*> * path){
+void Grafo::pushNugget(int vertex_a, int vertex_b, list<Edge*> * path){
     Nugget * newInsertion = new Nugget(vertex_a, vertex_b, path);
     this->solution->push_back(newInsertion);
 }
-void Grafo::insertNugget(int pos, int vertex_a, int vertex_b, vector<Edge*> * path){
+void Grafo::insertNugget(int pos, int vertex_a, int vertex_b, list<Edge*> * path){
     Nugget * newInsertion = new Nugget(vertex_a, vertex_b, path);
-    this->solution->insert(this->solution->begin() + pos, newInsertion);
+    list<Nugget *>::iterator it = this->solution->begin();
+    advance(it, pos);
+    this->solution->insert(it, newInsertion);
 }
 Nugget * Grafo::removeNugget(int pos){
-    this->solution->erase(this->solution->begin() + pos);
+    list<Nugget *>::iterator it = this->solution->begin();
+    advance(it, pos);
+    this->solution->erase(it);
 }
 
 
 void Grafo::solveByPath(RFWLocalRandom * random){
+    vector<std::pair<int,int>> * terminalToUse = new vector<std::pair<int,int>>();
     for(int g = 0; g < terminals->size(); g++){
         vector<int> availableVertex;
         for(int t = 0; t < terminals->at(g)->size(); t++){
-            availableVertex.push_back(terminals->at(g)->at(t));
+            availableVertex.push_back(terminals->at(g)->at(t));    
         }
-        // cout << "Total Vertex: " << availableVertex.size() << endl; 
-        // cin.get();
         while(availableVertex.size() > 1){
-            // cout << "Available Vertex: " << availableVertex.size() << endl;
-            // for(int a = 0; a < availableVertex.size(); a++)
-            //     cout << availableVertex[a] << " ";
-            // cout << endl;
-            // cin.get();
             int pivotPos = random->GetRand() % availableVertex.size();
             int pivot = availableVertex[pivotPos];
-            // cout << "PivotPos: " << pivotPos << " pivot: " << pivot << endl;
-            // cin.get();
             availableVertex.erase(availableVertex.begin() + pivotPos);
-            // cout << "Available Vertex: " << availableVertex.size() << endl;
-            // cin.get();
             int destPos = random->GetRand() % availableVertex.size();
             int dest = availableVertex[destPos];
-            // cout << "destPos: " << destPos << " dest: " << dest << endl;
-            // cin.get();
-            vector<Edge*> * path = connectTwoVertexDijkstra(pivot, dest, this->adj);
-            // for (int v = 0; v < path->size(); v++){ 
-            //     cout << "(" << path->at(v)->vertex_a << "," << path->at(v)->vertex_b << ") ";
-            // }
-            // cin.get();
-            for(int e = 0; e < path->size(); e++){
-                useEdge(path->at(e));
-                int vertex_a = path->at(e)->vertex_a;
-                int vertex_b = path->at(e)->vertex_b;
-                adj->at(vertex_a)->at(vertex_b) = 0;
-                adj->at(vertex_b)->at(vertex_a) = 0;
-            }
-            // cout << "Added" << endl;
-            this->pushNugget(pivot, dest, path);
-            // printGraph();
-            // cin.get();
-            
+            std::pair <int, int> newPair(pivot, dest);
+            // cout << "Pair Created: <" << newPair.first << "," << newPair.second << ">" << endl;
+            terminalToUse->push_back(newPair);
         }
-        
-        
     }
+
+    // for(int g = 0; g < terminals->size(); g++){
+    while(terminalToUse->size() > 0){
+        // cout << "Pairs Left: " << terminalToUse->size() << endl;
+        int pairPos = random->GetRand() % terminalToUse->size();
+        int pivot = terminalToUse->at(pairPos).first;
+        int dest = terminalToUse->at(pairPos).second;
+
+        list<Edge*> * path = connectTwoVertexDijkstra(pivot, dest, this->adj);
+        // cout << "Pair Added: <" << pivot << "," << dest << ">" << endl;
+        terminalToUse->erase(terminalToUse->begin() + pairPos);
+        // for (int v = 0; v < path->size(); v++){ 
+        //     cout << "(" << path->at(v)->vertex_a << "," << path->at(v)->vertex_b << ") ";
+        // }
+        // cin.get();
+        list<Edge *>::iterator it = path->begin();
+        int e = 0;
+        for(e = 0; e < path->size(); it++){
+            Edge * edge;
+            edge = *it;
+            useEdge(edge);
+            int vertex_a = edge->vertex_a;
+            int vertex_b = edge->vertex_b;
+            adj->at(vertex_a)->at(vertex_b) = 0;
+            adj->at(vertex_b)->at(vertex_a) = 0;
+            e++;
+        }
+        // cout << "Added" << endl;
+        this->pushNugget(pivot, dest, path);
+        // printGraph();
+        // cin.get();
+    
+    }
+        
+    // delete terminalToUse;
+    // cout << endl;
+    // cin.get();
     for(int e = 0; e < edges->size(); e++){
         int vertex_a = edges->at(e)->vertex_a;
         int vertex_b = edges->at(e)->vertex_b;
@@ -314,16 +294,16 @@ bool Grafo::relocateLocalSearch(){
     double bestCost = this->getSolutionCost();
     // printGraph();
     // cout << "startingCost: " << bestCost << endl;
-    vector<Edge*> * bestPath = new vector<Edge*>();
+    list<Edge*> * bestPath = new list<Edge*>();
     int bestI;
     bool improved = false;
     // cin.get();
     vector<vector<int>*> * currentState = new vector<vector<int>*>();
     for(int i = 0; i < this->V; i++){
-        vector<int>* line = new vector<int>();
-        for(int j = 0; j < this->V; j++){
-            line->push_back(-1);
-        }
+        vector<int>* line = new vector<int>(this->V, -1);
+        // for(int j = 0; j < this->V; j++){
+        //     line->push_back(-1);
+        // }
         currentState->push_back(line);
     }
 
@@ -342,20 +322,29 @@ bool Grafo::relocateLocalSearch(){
     //     cout << endl;
     // }
     // cin.get();
-
-    for(int i = 0; i < this->solution->size() - 1; i++){
-        
-        Nugget * nugget_i = solution->at(i);
+    list<Nugget *>::iterator it = this->solution->begin();
+    int i = 0;
+    for(i = 0; i < this->solution->size() - 1; it++){
+        // cout << "i: " << i << endl;
+        Nugget * nugget_i = *it;
         int vertex_a = nugget_i->vertex_a;
         int vertex_b = nugget_i->vertex_b;
         double newCost = 0.0;
         vector<int> edgesPresent(this->edges->size(), 0);
-        for(int j = 0; j < this->solution->size(); j++){
-            if(j == i) continue;
-            Nugget * nugget_j = solution->at(j);
-            vector<Edge *> * path = nugget_j->pathEdges;
-            for(int e = 0; e < path->size(); e++){
-                Edge * edge = path->at(e);
+        list<Nugget *>::iterator it2 = this->solution->begin();
+        int j = 0;
+        for(j = 0; j < this->solution->size(); it2++){
+            // cout << "j: " << j << endl;
+            if(j == i) {
+                j++;
+                continue;
+            }
+            Nugget * nugget_j = *it2;
+            list<Edge *> * path = nugget_j->pathEdges;
+            list<Edge *>::iterator it3 = path->begin();
+            int e = 0;
+            for( e = 0; e < path->size(); it3++){
+                Edge * edge = *it3;
                 int vertex_a = edge->vertex_a;
                 int vertex_b = edge->vertex_b;
                 currentState->at(vertex_a)->at(vertex_b) = 0;
@@ -364,9 +353,9 @@ bool Grafo::relocateLocalSearch(){
                     newCost += edge->weight;
                     edgesPresent[edge->id] = 1;
                 }
-                
+                e++;
             }
-
+            j++;
         }
 
 
@@ -381,14 +370,16 @@ bool Grafo::relocateLocalSearch(){
         // }
         // cin.get();
         // cout << "i: " << i << endl;
-        vector<Edge*> * new_path = this->connectTwoVertexDijkstra(vertex_a, vertex_b, currentState);
-
-        for(int e = 0; e < new_path->size(); e++){
-            Edge * edge = new_path->at(e);
+        list<Edge*> * new_path = this->connectTwoVertexDijkstra(vertex_a, vertex_b, currentState);
+        list<Edge *>::iterator it3 = new_path->begin();
+        int e = 0;
+        for(e = 0; e < new_path->size(); it3++){
+            Edge * edge = *it3;
             if(edgesPresent[edge->id] == 0){
-                newCost += new_path->at(e)->weight;
+                newCost += edge->weight;
                 edgesPresent[edge->id] = 1;
             }
+            e++;
         }
 
         // cout << "cost after reinsert: " << newCost << endl;
@@ -410,15 +401,22 @@ bool Grafo::relocateLocalSearch(){
             currentState->at(vertex_a)->at(vertex_b) = edges->at(e)->weight;
             currentState->at(vertex_b)->at(vertex_a) = edges->at(e)->weight;
         }
+        i++;
     }
     delete currentState;
+    // cout << "saiu" << endl;
     if(improved){
         // printGraph();
         // cout << "^^^^^^" << endl;
-        Nugget * nugget = solution->at(bestI);
-        for(int e = 0; e < nugget->pathEdges->size(); e++){
-            Edge * edge = nugget->pathEdges->at(e);
+        list<Nugget *>::iterator it = this->solution->begin();
+        advance(it, bestI);
+        Nugget * nugget = *it;
+        list<Edge *>::iterator it2 = nugget->pathEdges->begin();
+        int e = 0;
+        for(e = 0; e < nugget->pathEdges->size(); it2++){
+            Edge * edge = *it2;
             this->unUseEdge(edge->id);
+            e++;
         }
         // cout << "Melhorou!" << endl;
         // cout << "BestI: " << bestI << endl;
@@ -428,9 +426,12 @@ bool Grafo::relocateLocalSearch(){
         //     cout << "a: " << edge->vertex_a << " " << "b: " << edge->vertex_b << endl;
         // }
         // cin.get();
-        for(int e = 0; e < bestPath->size(); e++){
-            Edge * edge = bestPath->at(e);
-            this->useEdge(edge->id);
+        it2 = bestPath->begin();
+        e = 0;
+        for(e = 0; e < bestPath->size(); it2++){
+            Edge * edge = *it2;
+            this->useEdge(edge);
+            e++;
         }
         delete nugget->pathEdges;
         nugget->pathEdges = bestPath;
@@ -450,11 +451,16 @@ double Grafo::solveLuidi(RFWLocalRandom * random){
     auto start = std::chrono::system_clock::now();
     solveByPath(random);
     createSteinerForestAdj();
-    // cout << "Cost: " << this->getSolutionCost() << endl;
+    // cout << "Starting Cost: " << this->getSolutionCost() << endl;
+    // printGraph();
+    // cin.get();
     bool BLimproved = true;
     int BLITers = 0;
     while(BLimproved){
         BLimproved = relocateLocalSearch();
+        // cout << "BL Cost: " << this->getSolutionCost() << endl;
+        // printGraph();
+        // cin.get();
         BLITers++;
     }
     // cout << "BLIters: " << BLITers << endl;
@@ -468,13 +474,16 @@ double Grafo::solveLuidi(RFWLocalRandom * random){
 }
 
 void Grafo::createSteinerForestAdj(){
-    for(int e = 0; e < this->usedEdges->size(); e++){
-        Edge * edge = this->usedEdges->at(e);
+    list<Edge *>::iterator it = this->usedEdges->begin();
+    int e = 0;
+    for(e = 0; e < this->usedEdges->size(); it++){
+        Edge * edge = *it;
         int vertex_a = edge->vertex_a;
         int vertex_b = edge->vertex_b;
         double w = edge->weight;
         this->steinerForest->at(vertex_a)->at(vertex_b) = w;
         this->steinerForest->at(vertex_b)->at(vertex_a) = w;
+        e++;
     }
     // for(unsigned int i = 0; i < this->V; i++){
     //     for(unsigned j = 0; j < V; j++){
@@ -490,60 +499,6 @@ void Grafo::clearSteinerForestAdj(){
             this->steinerForest->at(i)->at(j) = -1;
         }
     }
-}
-
-void Grafo::createSteinerTrees(int t){
-    int nEdges = edges->size();
-    int nVertex = adj->size();
-
-    // printGraph();
-    // cin.get();
-    // for(int t=0; t < terminals->size(); t++){
-        Graph steinerTree;
-        int tdeclared = 0;
-        // cout << "nVertex: " << nVertex << " nEdges: " << nEdges << endl;
-
-        steinerTree.coord.SetMaxId(nVertex);
-        steinerTree.SetVertices(nVertex);
-
-        steinerTree.SetEdges(nEdges);
-
-        for(int e = 0; e < edges->size(); e++){
-            // cout << "Adding edge: " << edges->at(e).vertex_a + 1<< " " << edges->at(e).vertex_b + 1<< " "  << (EdgeCost)edges->at(e).weight << endl;
-            // cin.get();
-            int uchoa_vertex_a = edges->at(e)->vertex_a + 1;
-            int uchoa_vertex_b = edges->at(e)->vertex_b + 1;
-            double cost = edges->at(e)->weight;
-            if(edges->at(e)->usedEdge)
-                cost = 0.00001;
-            // cout << "Adding edge: " << uchoa_vertex_a<< " " << uchoa_vertex_b << " "  << (EdgeCost)cost << endl;
-            steinerTree.AddEdge(uchoa_vertex_a, uchoa_vertex_b, (EdgeCost)cost);
-        }
-
-        for(int s=0; s < terminals->at(t)->size(); s++){
-            // cout << "Adding terminal: " << terminals->at(t)->at(s) + 1<< endl;
-            // cin.get();
-            tdeclared++;
-            int terminal = terminals->at(t)->at(s) + 1;
-            steinerTree.MakeTerminal(terminal);
-        }
-        // if (tdeclared != steinerTree.TerminalCount()) cout << "invalid number of terminals" << endl; cin.get();
-
-        steinerTree.Commit();
-        // cout << "Edges added to Uchoa: " << steinerTree.EdgeCount()<< endl;
-        // for(int e = 0; e <= steinerTree.EdgeCount(); e++){
-        //     cout << steinerTree.GetFirstEndpoint(e) << " " << steinerTree.GetSecondEndpoint(e) << " " << steinerTree.GetCost(e) << endl;
-        // }
-        // cout << "PRINTED!" << endl;
-        // cin.get();
-        // steinerTree.Commit();
-
-        // cout << "Steiner Uchoa: " << endl;
-        // steinerTree.OutputGraph(stdout);
-        // cin.get();
-        treeGraphs->push_back(steinerTree);
-    // }
-    // cin.get();
 }
 
 void Grafo::printGraph(){
@@ -579,30 +534,38 @@ void Grafo::printGraph(){
     }
 
     cout << "Solution:" << endl;
-    for(unsigned int i = 0; i < solution->size(); i++){
-        cout << "(" << solution->at(i)->vertex_a << ", " << solution->at(i)->vertex_b << ") : ";
-        for(unsigned int j = 0; j < solution->at(i)->pathEdges->size(); j++){
-            cout << "[" << solution->at(i)->pathEdges->at(j)->vertex_a << "," << solution->at(i)->pathEdges->at(j)->vertex_b << "] ->";
+    list<Nugget *>::iterator it = solution->begin();
+    int i = 0;
+    for(i = 0; i < solution->size(); it++){
+        Nugget * n = *it;
+        cout << "(" << n->vertex_a << ", " << n->vertex_b << ") : ";
+        list<Edge *>::iterator it2 = n->pathEdges->begin();
+        int j = 0;
+        for(j = 0; j < n->pathEdges->size(); it2++){
+            Edge * e = *it2;
+            cout << "[" << e->vertex_a << "," << e->vertex_b << "] ->";
+            j++;
         }
         cout << endl;
+        i++;
     }
     cout << "Cost: " << getSolutionCost() << endl;
 
-    cout << "\n******************GRAPHVIZ******************" << endl;
-    vector<string> colors = {"red", "blue", "yellow", "purple", "brown", "green"};
+    // cout << "\n******************GRAPHVIZ******************" << endl;
+    // vector<string> colors = {"red", "blue", "yellow", "purple", "brown", "green"};
 
-    for(unsigned int i = 0; i < edges->size(); i++){
-        // if(edges->at(i)->usedEdge){
-            cout << edges->at(i)->vertex_a << " -- " << edges->at(i)->vertex_b << " [label=\"" <<  edges->at(i)->weight << "\"]"  << ";" << endl; 
-        // }
-    }
-    for(unsigned int t = 0; t < terminals->size(); t++){
-        for(unsigned int t1 = 0; t1 < terminals->at(t)->size(); t1++){
-            cout << terminals->at(t)->at(t1) << " [color=" << colors[t] << "];" << endl;
-        }
-    }
+    // for(unsigned int i = 0; i < edges->size(); i++){
+    //     // if(edges->at(i)->usedEdge){
+    //         cout << edges->at(i)->vertex_a << " -- " << edges->at(i)->vertex_b << " [label=\"" <<  edges->at(i)->weight << "\"]"  << ";" << endl; 
+    //     // }
+    // }
+    // for(unsigned int t = 0; t < terminals->size(); t++){
+    //     for(unsigned int t1 = 0; t1 < terminals->at(t)->size(); t1++){
+    //         cout << terminals->at(t)->at(t1) << " [color=" << colors[t] << "];" << endl;
+    //     }
+    // }
 
-    cout << endl;
+    // cout << endl;
 }
 
 void Grafo::useEdge(int e){
@@ -621,115 +584,126 @@ void Grafo::useEdge(Edge * e){
 
 void Grafo::unUseEdge(int e){
     edges->at(e)->unUseEdge();
-    for(int i = 0; i < usedEdges->size(); i++){
-        if(usedEdges->at(i)->id == edges->at(e)->id){
-            usedEdges->erase(usedEdges->begin() + i);
-            return;
+    if(!edges->at(e)->usedEdge){
+        list<Edge *>::iterator it = usedEdges->begin();
+        int i = 0;
+        for(i = 0; i < usedEdges->size(); it++){
+            Edge * edge = *it;
+            if(edge->id == edges->at(e)->id){
+                usedEdges->erase(it);
+                return;
+            }
+            i++;
         }
     }
 }
 
 void Grafo::unUseEdge(Edge * e){
     e->unUseEdge();
-    for(int i = 0; i < usedEdges->size(); i++){
-        if(usedEdges->at(i) == e){
-            usedEdges->erase(usedEdges->begin() + i);
-            return;
+    if(!e->usedEdge){
+        list<Edge *>::iterator it = usedEdges->begin();
+        int i = 0;
+        for(i = 0; i < usedEdges->size(); it++){
+            Edge * edge = *it;
+            if(edge == e){
+                usedEdges->erase(it);
+                return;
+            }
         }
     }
 }
 
-vector<vector<Edge*>*>* Grafo::getConnectedComponents(){
+// vector<vector<Edge*>*>* Grafo::getConnectedComponents(){
     
-    vector <vector <Edge*>*>* components = new vector<vector<Edge*>*>();
+//     vector <vector <Edge*>*>* components = new vector<vector<Edge*>*>();
     
-    vector<Edge*>* group;
+//     vector<Edge*>* group;
     
-    vector<Edge*>* availableEdges = new vector<Edge*>();
+//     vector<Edge*>* availableEdges = new vector<Edge*>();
     
-    for(int e = 0; e < usedEdges->size(); e++){
-        availableEdges->push_back(usedEdges->at(e));
-    }
+//     for(int e = 0; e < usedEdges->size(); e++){
+//         availableEdges->push_back(usedEdges->at(e));
+//     }
 
 
-    while(availableEdges->size() != 0){
-        // cout << "TotalUsedEdges: " << availableEdges->size() << endl;
-        // cin.get();
-        group = new vector<Edge*>();
-        vector<int> vertex;
-        group->push_back(availableEdges->back());
+//     while(availableEdges->size() != 0){
+//         // cout << "TotalUsedEdges: " << availableEdges->size() << endl;
+//         // cin.get();
+//         group = new vector<Edge*>();
+//         vector<int> vertex;
+//         group->push_back(availableEdges->back());
         
-        vertex.push_back(availableEdges->back()->vertex_a);
-        vertex.push_back(availableEdges->back()->vertex_b);
-        // cout << "Pushed: " << availableEdges->back().vertex_a << "," << availableEdges->back().vertex_b << endl;
-        // cin.get();
-        availableEdges->pop_back();
-        // cout << "TotalUsedEdges: " << availableEdges->size() << endl;
-        // cin.get();
-        int e = 0;
-        while(e < availableEdges->size()){
-            Edge * edge = availableEdges->at(e);
-            // cout << "Checking Edge: ("<<edge.vertex_a<<","<<edge.vertex_b<<")"<<endl;
-            // cin.get();
-            bool vertex_a_in = false;
-            bool vertex_b_in = false;
-            for(int v = 0; v < vertex.size(); v++){
-                if(edge->vertex_a == vertex[v]){
-                    // cout << "Vertex_a (" << edge.vertex_a << ") in!" << endl;
-                    vertex_a_in = true;
-                }
-                if(edge->vertex_b == vertex[v]){
-                    // cout << "Vertex_b (" << edge.vertex_b << ") in!" << endl;
-                    vertex_b_in = true;
-                }
-            }
-            if(vertex_a_in && !vertex_b_in){
-                vertex.push_back(edge->vertex_b);
-            }
-            if(vertex_b_in && !vertex_a_in){
-                vertex.push_back(edge->vertex_a);
-            }
+//         vertex.push_back(availableEdges->back()->vertex_a);
+//         vertex.push_back(availableEdges->back()->vertex_b);
+//         // cout << "Pushed: " << availableEdges->back().vertex_a << "," << availableEdges->back().vertex_b << endl;
+//         // cin.get();
+//         availableEdges->pop_back();
+//         // cout << "TotalUsedEdges: " << availableEdges->size() << endl;
+//         // cin.get();
+//         int e = 0;
+//         while(e < availableEdges->size()){
+//             Edge * edge = availableEdges->at(e);
+//             // cout << "Checking Edge: ("<<edge.vertex_a<<","<<edge.vertex_b<<")"<<endl;
+//             // cin.get();
+//             bool vertex_a_in = false;
+//             bool vertex_b_in = false;
+//             for(int v = 0; v < vertex.size(); v++){
+//                 if(edge->vertex_a == vertex[v]){
+//                     // cout << "Vertex_a (" << edge.vertex_a << ") in!" << endl;
+//                     vertex_a_in = true;
+//                 }
+//                 if(edge->vertex_b == vertex[v]){
+//                     // cout << "Vertex_b (" << edge.vertex_b << ") in!" << endl;
+//                     vertex_b_in = true;
+//                 }
+//             }
+//             if(vertex_a_in && !vertex_b_in){
+//                 vertex.push_back(edge->vertex_b);
+//             }
+//             if(vertex_b_in && !vertex_a_in){
+//                 vertex.push_back(edge->vertex_a);
+//             }
             
-            if(vertex_a_in || vertex_b_in){
-                // cout << "Added Edge: ("<<edge.vertex_a<<","<<edge.vertex_b<<")"<<endl;
-                group->push_back(edge);
-                availableEdges->erase(availableEdges->begin() + e);
-                e = 0;
-            }else{
-                e++;
-                // cout << "No Use Edge: ("<<edge.vertex_a<<","<<edge.vertex_b<<")"<<endl;
-            }
-            // cout << "Vertex size: " << vertex.size() << endl;
-            // cout << "Group size: " << group->size() << endl;
-            // cout << "AvailableEdges: " << availableEdges->size() << endl;
-            // cin.get();
+//             if(vertex_a_in || vertex_b_in){
+//                 // cout << "Added Edge: ("<<edge.vertex_a<<","<<edge.vertex_b<<")"<<endl;
+//                 group->push_back(edge);
+//                 availableEdges->erase(availableEdges->begin() + e);
+//                 e = 0;
+//             }else{
+//                 e++;
+//                 // cout << "No Use Edge: ("<<edge.vertex_a<<","<<edge.vertex_b<<")"<<endl;
+//             }
+//             // cout << "Vertex size: " << vertex.size() << endl;
+//             // cout << "Group size: " << group->size() << endl;
+//             // cout << "AvailableEdges: " << availableEdges->size() << endl;
+//             // cin.get();
 
-        }
-        components->push_back(group);
-        // cout << "Added connected component!" << endl;
-        // for(int e = 0; e < group->size(); e++){
-        //     cout << "(" << group->at(e)->vertex_a << "," << group->at(e)->vertex_b << ")";
-        // }
-        // cout << endl;
-        // cout << "TotalUsedEdges: " << availableEdges->size() << endl;
-        // cin.get();
-    }
+//         }
+//         components->push_back(group);
+//         // cout << "Added connected component!" << endl;
+//         // for(int e = 0; e < group->size(); e++){
+//         //     cout << "(" << group->at(e)->vertex_a << "," << group->at(e)->vertex_b << ")";
+//         // }
+//         // cout << endl;
+//         // cout << "TotalUsedEdges: " << availableEdges->size() << endl;
+//         // cin.get();
+//     }
 
-    // if(components->size() > 1){
-    //     printGraph();
-    //     for(int c = 0; c < components->size(); c++){
-    //         vector<Edge*> * group = components->at(c);
-    //         cout << "Group_"<< c << ": ";
-    //         for(int e = 0; e < group->size(); e++){
-    //             cout << "(" << group->at(e)->vertex_a << "," << group->at(e)->vertex_b << ")";
-    //         }
-    //         cout << endl;
-    //     }
-    //     cin.get();
-    // }
+//     // if(components->size() > 1){
+//     //     printGraph();
+//     //     for(int c = 0; c < components->size(); c++){
+//     //         vector<Edge*> * group = components->at(c);
+//     //         cout << "Group_"<< c << ": ";
+//     //         for(int e = 0; e < group->size(); e++){
+//     //             cout << "(" << group->at(e)->vertex_a << "," << group->at(e)->vertex_b << ")";
+//     //         }
+//     //         cout << endl;
+//     //     }
+//     //     cin.get();
+//     // }
     
-    return components;
-}
+//     return components;
+// }
 
 int minKey(int key[], bool mstSet[], int V)  
 {  
@@ -892,32 +866,18 @@ void Grafo::removeCiclesWithPrim(vector<vector<Edge*>*>* components){
 
 int Grafo::getSolutionCost(){
     int cost = 0;
-    for(int i = 0; i < usedEdges->size(); i++){
-        cost += usedEdges->at(i)->weight;
+    
+    list<Edge *>::iterator it = usedEdges->begin();
+    int i = 0;
+    for(i = 0; i < usedEdges->size(); it++){
+        Edge * edge = *it;
+        cost += edge->weight;
+        i++;
     }
 
     return cost;
 }
 
-double Grafo::solvePrim(RFWLocalRandom * random,int seed, int iter){
-    auto start = std::chrono::system_clock::now();
-    for(int t = 0; t < terminals->size(); t++){
-        createSteinerTrees(t);
-        solveSteinerTrees(random, seed, iter);  
-    }
-    
-    // printGraph();
-    // cin.get();
-    // vector<vector<Edge*>*>* components = getConnectedComponents();
-    // removeCiclesWithPrim(components);
-    createSteinerForestAdj();
-    auto end = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end-start;
-    // printGraph();
-    // cin.get();
-    return (double)elapsed_seconds.count();
-    
-}
     
 void Grafo::addEdge(int id, int vertex_a, int vertex_b, double weight){
     id = edges->size();
@@ -931,7 +891,7 @@ bool Grafo::checkTerminalsMeet(){
      for(int t = 0; t < terminals->size(); t++){
          for(int v1 = 0; v1 < terminals->at(t)->size(); v1++){
              for(int v2 = v1+1; v2 < terminals->at(t)->size(); v2++){
-                vector<Edge*> * path = connectTwoVertexDijkstra(terminals->at(t)->at(v1), terminals->at(t)->at(v2), this->steinerForest);
+                list<Edge*> * path = connectTwoVertexDijkstra(terminals->at(t)->at(v1), terminals->at(t)->at(v2), this->steinerForest);
                 if(path->size() == 0)
                     return false;
              }
