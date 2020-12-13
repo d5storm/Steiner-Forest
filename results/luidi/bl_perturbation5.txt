@@ -1,0 +1,298 @@
+./Instances/sergio/c01.dat 0 85 21.851
+./Instances/sergio/c01.dat 1 85 22.1904
+./Instances/sergio/c01.dat 0 85 21.2296
+./Instances/sergio/c01.dat 0 85 21.8991
+./Instances/sergio/c01.dat 0 85 21.3794
+./Instances/sergio/c01.dat 0 85 21.2831
+./Instances/sergio/c01.dat 0 85 20.6616
+./Instances/sergio/c01.dat 0 85 20.6802
+./Instances/sergio/c01.dat 1 85 21.1071
+./Instances/sergio/c01.dat 0 85 20.7945
+./Instances/sergio/c02.dat 7 143 23.0014
+./Instances/sergio/c02.dat 4 143 22.9333
+./Instances/sergio/c02.dat 2 143 23.2972
+./Instances/sergio/c02.dat 4 143 22.9892
+./Instances/sergio/c02.dat 1 143 22.706
+./Instances/sergio/c02.dat 0 143 22.3586
+./Instances/sergio/c02.dat 4 143 22.6559
+./Instances/sergio/c02.dat 9 143 22.164
+./Instances/sergio/c02.dat 2 143 22.453
+./Instances/sergio/c02.dat 0 143 22.0233
+./Instances/sergio/c03.dat 175 775 90.1659
+./Instances/sergio/c03.dat 32 778 89.9625
+./Instances/sergio/c03.dat 65 770 85.7994
+./Instances/sergio/c03.dat 21 776 85.2941
+./Instances/sergio/c03.dat 15 765 85.307
+./Instances/sergio/c03.dat 107 775 85.3276
+./Instances/sergio/c03.dat 197 766 87.4065
+./Instances/sergio/c03.dat 16 769 84.3675
+./Instances/sergio/c03.dat 148 776 85.9041
+./Instances/sergio/c03.dat 125 772 85.0505
+./Instances/sergio/c04.dat 79 1106 152.918
+./Instances/sergio/c04.dat 192 1095 149.379
+./Instances/sergio/c04.dat 135 1100 154.992
+./Instances/sergio/c04.dat 87 1100 155.727
+./Instances/sergio/c04.dat 83 1097 148.863
+./Instances/sergio/c04.dat 135 1108 151.334
+./Instances/sergio/c04.dat 123 1102 151.814
+./Instances/sergio/c04.dat 180 1099 152.225
+./Instances/sergio/c04.dat 32 1103 149.513
+./Instances/sergio/c04.dat 153 1106 149.888
+./Instances/sergio/c05.dat 154 1612 394.442
+./Instances/sergio/c05.dat 162 1604 371.775
+./Instances/sergio/c05.dat 23 1607 372.941
+./Instances/sergio/c05.dat 62 1602 389.388
+./Instances/sergio/c05.dat 73 1605 370.872
+./Instances/sergio/c05.dat 10 1604 383.12
+./Instances/sergio/c05.dat 39 1607 399.762
+./Instances/sergio/c05.dat 81 1607 389.115
+./Instances/sergio/c05.dat 61 1608 386.834
+./Instances/sergio/c05.dat 3 1606 379.109
+./Instances/sergio/c06.dat 0 47 35.5007
+./Instances/sergio/c06.dat 0 47 35.2249
+./Instances/sergio/c06.dat 1 47 35.4659
+./Instances/sergio/c06.dat 3 47 35.3197
+./Instances/sergio/c06.dat 2 47 35.2044
+./Instances/sergio/c06.dat 0 47 35.3
+./Instances/sergio/c06.dat 0 47 35.2884
+./Instances/sergio/c06.dat 0 47 35.2485
+./Instances/sergio/c06.dat 1 47 35.313
+./Instances/sergio/c06.dat 0 47 35.3386
+./Instances/sergio/c07.dat 0 89 36.895
+./Instances/sergio/c07.dat 0 89 36.8683
+./Instances/sergio/c07.dat 0 89 37.0695
+./Instances/sergio/c07.dat 0 89 36.9553
+./Instances/sergio/c07.dat 0 89 37.6596
+./Instances/sergio/c07.dat 0 89 36.9798
+./Instances/sergio/c07.dat 0 89 36.9101
+./Instances/sergio/c07.dat 0 89 37.1426
+./Instances/sergio/c07.dat 0 89 37.2468
+./Instances/sergio/c07.dat 0 89 37.1018
+./Instances/sergio/c08.dat 185 525 146.628
+./Instances/sergio/c08.dat 20 523 151.824
+./Instances/sergio/c08.dat 68 527 144.057
+./Instances/sergio/c08.dat 18 522 142.088
+./Instances/sergio/c08.dat 61 526 147.345
+./Instances/sergio/c08.dat 35 522 149.918
+./Instances/sergio/c08.dat 180 522 144.464
+./Instances/sergio/c08.dat 30 529 142.979
+./Instances/sergio/c08.dat 24 523 143.441
+./Instances/sergio/c08.dat 10 519 146.71
+./Instances/sergio/c09.dat 179 733 268.347
+./Instances/sergio/c09.dat 87 726 271.196
+./Instances/sergio/c09.dat 80 727 257.451
+./Instances/sergio/c09.dat 66 731 270.808
+./Instances/sergio/c09.dat 68 724 264.051
+./Instances/sergio/c09.dat 61 729 261.32
+./Instances/sergio/c09.dat 141 730 269.37
+./Instances/sergio/c09.dat 111 731 259.905
+./Instances/sergio/c09.dat 140 730 269.361
+./Instances/sergio/c09.dat 36 730 268.216
+./Instances/sergio/c10.dat 58 1141 744.945
+./Instances/sergio/c10.dat 46 1144 745.416
+./Instances/sergio/c10.dat 134 1144 730.767
+./Instances/sergio/c10.dat 158 1144 723.207
+./Instances/sergio/c10.dat 48 1141 721.369
+./Instances/sergio/c10.dat 142 1133 732.225
+./Instances/sergio/c10.dat 186 1141 740.72
+./Instances/sergio/c10.dat 14 1145 757.76
+./Instances/sergio/c10.dat 188 1135 731.527
+./Instances/sergio/c10.dat 135 1142 737.553
+./Instances/sergio/c11.dat 0 28 82.6137
+./Instances/sergio/c11.dat 0 28 82.0599
+./Instances/sergio/c11.dat 0 28 82.5265
+./Instances/sergio/c11.dat 0 28 81.951
+./Instances/sergio/c11.dat 0 28 82.3136
+./Instances/sergio/c11.dat 0 28 81.9847
+./Instances/sergio/c11.dat 0 28 82.614
+./Instances/sergio/c11.dat 0 28 82.0946
+./Instances/sergio/c11.dat 0 28 82.5338
+./Instances/sergio/c11.dat 0 28 82.4736
+./Instances/sergio/instA.dat 0 3 0.00107
+./Instances/sergio/instA.dat 0 3 0.001064
+./Instances/sergio/instA.dat 0 3 0.0010844
+./Instances/sergio/instA.dat 0 3 0.0011125
+./Instances/sergio/instA.dat 0 3 0.0010834
+./Instances/sergio/instA.dat 0 3 0.0010867
+./Instances/sergio/instA.dat 0 3 0.0010893
+./Instances/sergio/instA.dat 0 3 0.001055
+./Instances/sergio/instA.dat 0 3 0.0010738
+./Instances/sergio/instA.dat 0 3 0.0010594
+./Instances/sergio/instB.dat 0 3 0.0008706
+./Instances/sergio/instB.dat 0 3 0.0008417
+./Instances/sergio/instB.dat 0 3 0.0008601
+./Instances/sergio/instB.dat 0 3 0.0008432
+./Instances/sergio/instB.dat 0 3 0.0008532
+./Instances/sergio/instB.dat 0 3 0.0008368
+./Instances/sergio/instB.dat 0 3 0.0008555
+./Instances/sergio/instB.dat 0 3 0.0008556
+./Instances/sergio/instB.dat 0 3 0.0008508
+./Instances/sergio/instB.dat 0 3 0.0008462
+./Instances/sergio/instC.dat 0 7 0.0031514
+./Instances/sergio/instC.dat 0 7 0.0031229
+./Instances/sergio/instC.dat 0 7 0.0031369
+./Instances/sergio/instC.dat 0 7 0.003139
+./Instances/sergio/instC.dat 0 7 0.0031295
+./Instances/sergio/instC.dat 0 7 0.0031245
+./Instances/sergio/instC.dat 0 7 0.0031425
+./Instances/sergio/instC.dat 0 7 0.0031445
+./Instances/sergio/instC.dat 0 7 0.0031577
+./Instances/sergio/instC.dat 0 7 0.0031557
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 70 386 1.52325
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 125 387 1.47737
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 191 383 1.52977
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 67 382 1.50759
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 131 387 1.55883
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 89 388 1.49841
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 59 386 1.53613
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 27 387 1.50055
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 19 392 1.5183
+./Instances/sergio/jmp-n-100-a-200-p-025-k-10-s-4791.dat 28 387 1.5254
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 122 369 1.85239
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 151 367 1.93022
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 117 370 1.85471
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 22 364 1.92638
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 145 365 1.9008
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 137 361 1.87661
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 58 367 1.78345
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 10 364 1.94612
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 136 361 1.80135
+./Instances/sergio/jmp-n-100-a-200-p-025-k-5-s-4786.dat 90 368 1.80835
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 16 529 4.55788
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 141 533 4.55111
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 41 521 4.4428
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 84 529 4.53171
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 41 524 4.45414
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 182 520 4.30714
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 160 519 4.24523
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 67 524 4.54131
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 17 525 4.5095
+./Instances/sergio/jmp-n-100-a-200-p-050-k-15-s-4911.dat 90 533 4.40015
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 0 36 0.02633
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 2 36 0.027983
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 2 36 0.0280098
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 1 36 0.0280443
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 1 36 0.0279332
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 1 36 0.0274697
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 0 36 0.0283677
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 1 36 0.0283843
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 8 36 0.0275322
+./Instances/sergio/jmp-n-25-a-160-p-025-k-2-s-4711.dat 1 36 0.0282379
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 12 107 0.195649
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 3 107 0.191815
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 4 107 0.197468
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 55 107 0.190607
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 12 107 0.185501
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 42 107 0.182575
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 5 107 0.180658
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 35 107 0.185124
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 50 107 0.186659
+./Instances/sergio/jmp-n-50-a-160-p-025-k-5-s-4731.dat 8 107 0.187213
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 76 91 0.191509
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 13 91 0.190797
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 108 91 0.189263
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 112 90 0.196531
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 7 91 0.187229
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 38 91 0.188246
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 0 91 0.189915
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 46 91 0.191815
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 32 91 0.189081
+./Instances/sergio/jmp-n-50-a-200-p-025-k-5-s-4781.dat 53 91 0.188439
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 174 4091 174.063
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 142 4027 174.709
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 162 4069 174.194
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 95 4044 174.238
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 93 4072 172.881
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 76 4048 173.737
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 125 4060 174.178
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 144 3987 173.676
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 29 4074 173.947
+./Instances/sergio/jmp-n-500-a-200-p-025-k-35-s-5192.dat 122 4051 175.458
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 28 6129 257.627
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 24 6091 267.837
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 189 6095 271.969
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 78 6121 270.809
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 175 6093 270.405
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 162 6109 276.468
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 92 6118 277.222
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 43 6163 275.321
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 49 6161 277.481
+./Instances/sergio/jmp-n-500-a-200-p-050-k-50-s-5226.dat 89 6164 263.034
+./Instances/sergio/c01.datCost: 87
+Cost: 87
+Cost: 85
+Cost: 85
+Cost: 91
+Cost: 85
+CTRL C ---------------------------------- PRESSIONADO!!!
+./Instances/sergio/c01.datUsed Edges:
+(484,333)[2] (484,478)[2] (362,333)[2] (18,362)[1] (498,119)[2] (44,119)[1] (362,452)[1] (126,127)[1] (452,373)[1] (163,18)[1] (119,28)[1] (229,419)[1] (395,256)[1] (242,395)[1] (256,28)[1] (44,419)[1] (373,12)[1] (229,126)[1] (478,395)[2] 
+Group of Terminals:
+Group 0: 163 127 498 
+Group 1: 12 242 
+Solution:
+(242, 12) : [242,395] ->[478,395] ->[484,478] ->[484,333] ->[362,333] ->[362,452] ->[452,373] ->[373,12] ->
+(163, 498) : [163,18] ->[18,362] ->[362,333] ->[484,333] ->[484,478] ->[478,395] ->[395,256] ->[256,28] ->[119,28] ->[498,119] ->
+(127, 498) : [126,127] ->[229,126] ->[229,419] ->[44,419] ->[44,119] ->[498,119] ->
+Cost: 87
+Cost: 87
+Cost: 87
+Used Edges:
+(484,333)[2] (484,478)[1] (484,19)[1] (362,333)[2] (18,362)[1] (498,119)[1] (44,119)[1] (277,126)[1] (362,452)[1] (126,127)[2] (452,373)[1] (163,18)[1] (89,277)[1] (229,419)[1] (242,395)[1] (44,419)[1] (373,12)[1] (229,126)[1] (478,395)[1] (19,89)[1] 
+Group of Terminals:
+Group 0: 163 127 498 
+Group 1: 12 242 
+Solution:
+(498, 127) : [498,119] ->[44,119] ->[44,419] ->[229,419] ->[229,126] ->[126,127] ->
+(242, 12) : [242,395] ->[478,395] ->[484,478] ->[484,333] ->[362,333] ->[362,452] ->[452,373] ->[373,12] ->
+(163, 127) : [163,18] ->[18,362] ->[362,333] ->[484,333] ->[484,19] ->[19,89] ->[89,277] ->[277,126] ->[126,127] ->
+Cost: 85
+Cost: 85
+Cost: 85
+Used Edges:
+(268,291)[1] (484,333)[1] (484,478)[1] (362,333)[1] (18,362)[1] (498,119)[2] (44,119)[2] (177,268)[1] (419,177)[1] (362,452)[1] (291,183)[1] (126,127)[1] (452,373)[1] (163,18)[1] (229,419)[1] (242,395)[1] (44,419)[2] (183,362)[1] (373,12)[1] (229,126)[1] (478,395)[1] 
+Group of Terminals:
+Group 0: 163 127 498 
+Group 1: 12 242 
+Solution:
+(127, 498) : [126,127] ->[229,126] ->[229,419] ->[44,419] ->[44,119] ->[498,119] ->
+(163, 498) : [163,18] ->[18,362] ->[183,362] ->[291,183] ->[268,291] ->[177,268] ->[419,177] ->[44,419] ->[44,119] ->[498,119] ->
+(242, 12) : [242,395] ->[478,395] ->[484,478] ->[484,333] ->[362,333] ->[362,452] ->[452,373] ->[373,12] ->
+Cost: 91
+Cost: 91
+Cost: 85
+Used Edges:
+(484,333)[3] (484,478)[3] (362,333)[3] (18,362)[2] (498,119)[1] (44,119)[1] (362,452)[1] (126,127)[1] (452,373)[1] (163,18)[2] (119,28)[2] (229,419)[1] (395,256)[2] (242,395)[1] (256,28)[2] (44,419)[1] (373,12)[1] (229,126)[1] (478,395)[3] 
+Group of Terminals:
+Group 0: 163 127 498 
+Group 1: 12 242 
+Solution:
+(242, 12) : [242,395] ->[478,395] ->[484,478] ->[484,333] ->[362,333] ->[362,452] ->[452,373] ->[373,12] ->
+(498, 163) : [498,119] ->[119,28] ->[256,28] ->[395,256] ->[478,395] ->[484,478] ->[484,333] ->[362,333] ->[18,362] ->[163,18] ->
+(127, 163) : [126,127] ->[229,126] ->[229,419] ->[44,419] ->[44,119] ->[119,28] ->[256,28] ->[395,256] ->[478,395] ->[484,478] ->[484,333] ->[362,333] ->[18,362] ->[163,18] ->
+Cost: 87
+Cost: 87
+Cost: 87
+Used Edges:
+(268,291)[1] (484,333)[1] (268,275)[2] (178,275)[2] (484,478)[1] (178,119)[2] (362,333)[1] (18,362)[1] (498,119)[2] (177,268)[1] (419,177)[1] (362,452)[1] (291,183)[1] (126,127)[1] (452,373)[1] (163,18)[1] (229,419)[1] (242,395)[1] (183,362)[1] (373,12)[1] (229,126)[1] (478,395)[1] 
+Group of Terminals:
+Group 0: 163 127 498 
+Group 1: 12 242 
+Solution:
+(163, 498) : [163,18] ->[18,362] ->[183,362] ->[291,183] ->[268,291] ->[268,275] ->[178,275] ->[178,119] ->[498,119] ->
+(242, 12) : [242,395] ->[478,395] ->[484,478] ->[484,333] ->[362,333] ->[362,452] ->[452,373] ->[373,12] ->
+(498, 127) : [498,119] ->[178,119] ->[178,275] ->[268,275] ->[177,268] ->[419,177] ->[229,419] ->[229,126] ->[126,127] ->
+Cost: 96
+Cost: 96
+Cost: 96
+Used Edges:
+(484,333)[2] (484,478)[2] (362,333)[2] (18,362)[1] (498,119)[2] (44,119)[1] (362,452)[1] (126,127)[1] (452,373)[1] (163,18)[1] (119,28)[1] (229,419)[1] (395,256)[1] (242,395)[1] (256,28)[1] (44,419)[1] (373,12)[1] (229,126)[1] (478,395)[2] 
+Group of Terminals:
+Group 0: 163 127 498 
+Group 1: 12 242 
+Solution:
+(242, 12) : [242,395] ->[478,395] ->[484,478] ->[484,333] ->[362,333] ->[362,452] ->[452,373] ->[373,12] ->
+(163, 498) : [163,18] ->[18,362] ->[362,333] ->[484,333] ->[484,478] ->[478,395] ->[395,256] ->[256,28] ->[119,28] ->[498,119] ->
+(127, 498) : [126,127] ->[229,126] ->[229,419] ->[44,419] ->[44,119] ->[498,119] ->
+Cost: 87
+CTRL C ---------------------------------- PRESSIONADO!!!

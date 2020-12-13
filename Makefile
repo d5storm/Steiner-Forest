@@ -18,13 +18,17 @@ steiner: rfw_timer rfw_random
 	$(CXX) $(CXXFLAGS) -o $(BIN)/steiner.o -c $(SRC)/steiner.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(BIN)/steiner $(BIN)/steiner.o $(BIN)/rfw_random.o $(BIN)/rfw_timer.o
 
+
 forest:  rfw_timer rfw_random
 	$(CXX) $(CXXFLAGS) -o $(BIN)/steiner_forest.o -c ./Forest_Steiner.cpp
 
-main: forest rfw_timer rfw_random
+mining: forest
+	$(CXX) $(CXXFLAGS) -o $(BIN)/Mining.o -c ./Mining.cpp
+
+main: forest rfw_timer rfw_random mining
 	$(CXX) $(CXXFLAGS) -o $(BIN)/main.o -c ./main.cpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(BIN)/heuristic $(BIN)/main.o $(BIN)/steiner_forest.o $(BIN)/rfw_random.o $(BIN)/rfw_timer.o
-	rm $(BIN)/rfw_random.o $(BIN)/rfw_timer.o $(BIN)/steiner.o $(BIN)/steiner_forest.o $(BIN)/main.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(BIN)/heuristic $(BIN)/main.o $(BIN)/Mining.o $(BIN)/steiner_forest.o  $(BIN)/rfw_random.o $(BIN)/rfw_timer.o 
+	rm $(BIN)/rfw_random.o $(BIN)/rfw_timer.o $(BIN)/steiner.o $(BIN)/steiner_forest.o $(BIN)/main.o $(BIN)/Mining.o
 
 clean:
 	rm -f $(BIN)/*
