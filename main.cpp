@@ -27,18 +27,24 @@ int main(int argc, char *argv[]) {
     
     double alpha = stoi(argv[3]) / 10.0;
     int algIter = stoi(argv[4]);
-    int uchoaIter = stoi(argv[5]);
-    int perturbation = stoi(argv[6]);
+    int eliteSetSize = stoi(argv[5]);
+    int support = stoi(argv[6]);
     double execTime = stod(argv[7]);
+    bool DM;
+    string dm_string(argv[8]);
+    if (dm_string.compare("true") == 0)
+        DM = true;
+    else
+        DM = false;
 
-    Mining* mminer = new Mining(10, 8, 30, random);
+    Mining* mminer = new Mining(eliteSetSize, support, 30, random);
 
-    bool useIter = true;
-    bool useTime = true;
-    if(execTime == -1)
-        useTime = false;
-    else if(algIter == -1)
-        useIter = false;
+    bool useIter = false;
+    bool useTime = false;
+    if(execTime != -1)
+        useTime = true;
+    else if(algIter != -1)
+        useIter = true;
 
     int bestSol = INT_MAX;
     double totalTime = 0.0;
@@ -49,24 +55,34 @@ int main(int argc, char *argv[]) {
     int totalEdgeLS = 0;
 
     bool mined = false;
+    if (DM && useIter == -1){
+        cout << "NUMERO DE ITER NAO INSERIDO" << endl;
+        exit(1);
+    }
     while(checkTime(useTime, totalTime, execTime) && checkiter(useIter, iter, algIter)){
-        if(iter == algIter / 2){
+        // cout << " ITER: " << iter << endl;
+        if(DM && (iter == algIter / 2 )){
+            // cout << "mining!" << endl;
+            // cin.get();
             // mminer->printES();
             mminer->map_file();
             mminer->mine();
             mminer->unmapall_file(best->V);
+            // cout << "mined!" << endl;
             // cin.get();
             mined = true;
         }
         bool solToES = false;
-        // cout << totalTime << endl;
         Grafo * testLuidi = new Grafo(argv[1]);
-        if(!mined){
-            totalTime += testLuidi->solveLuidi(random, perturbation, &totalEdgeLS, alpha, false, NULL);
+        // cout << totalTime << endl;
+        if(!DM || !mined){
+            // cout << "solving not mined" << endl;
+            totalTime += testLuidi->solveLuidi(random, 0, &totalEdgeLS, alpha, false, NULL);
+            // cout << "solved not mined" << endl;
         } else{
             Pattern * p = mminer->getCurrentPattern();
             mminer->nextPattern();
-            totalTime += testLuidi->solveLuidi(random, perturbation, &totalEdgeLS, alpha, true, p->elements);
+            totalTime += testLuidi->solveLuidi(random, 0, &totalEdgeLS, alpha, true, p->elements);
             // cout << "CREATED WITH PATTERN" << endl;
             // testLuidi->printGraph();
             // cin.get();
@@ -75,7 +91,7 @@ int main(int argc, char *argv[]) {
             cout << "Luidi UnFeasible!" << endl;
             exit(-1);
         }
-        if(mminer->updateES(testLuidi) && !mined){
+        if(DM && mminer->updateES(testLuidi) && !mined){
             solToES = true;
             // cout << "ATUALIZOU CE" << endl;
             // mminer->printES();
@@ -87,17 +103,14 @@ int main(int argc, char *argv[]) {
             // cin.get();
         }
         if(testLuidi->getSolutionCost() < bestSol){
-            // if(testLuidi->getSolutionCost() == 1579.0){
-            //     testLuidi->printGraph();
-            //     cin.get();
-            // }
             bestSol = testLuidi->getSolutionCost();
-            delete best;
+            // delete best;
             best = testLuidi;
             iterBestFound = iter;
         } else{
             if(!solToES){
-                delete testLuidi;
+                // cout << "deleted sol" << endl;
+                // delete testLuidi;
             }
         }
         // cin.get();

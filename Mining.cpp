@@ -151,6 +151,7 @@ void Mining::unmapall_file(int n){
 
 bool Mining::updateES(Grafo * s){
 	// cout << "SOLUTION COST: " << s->getSolutionCost() << " WORST COST: " << worstCostES << endl;
+	// cout << "ES Size: " << sizeES << " Max Size: " << maxSizeES << endl;
 	// cin.get();
 	if (s->getSolutionCost() < worstCostES || sizeES < maxSizeES) {
 		// for(int i = 0 ; i < sizeES ; i++){
@@ -168,20 +169,29 @@ bool Mining::updateES(Grafo * s){
 		mined = false;
 		iterWNC = 0;
 		if(sizeES < maxSizeES){
+			// cout << "blow" << endl;
 			ES->at(sizeES++) = s;
 		}else{
+			// cout << "blei" << endl;
 			worstCostES = ES->at(0)->getSolutionCost();
+			// cout << "worstCost " << worstCostES << endl;
 			worstCostPos = 0;	
 			for(int i = 1 ; i < sizeES ; i++){
+				// cout << "i: " << i << endl;
 				if(ES->at(i)->getSolutionCost() > worstCostES ){
-					worstCostES = ES->at(0)->getSolutionCost();
+					worstCostES = ES->at(i)->getSolutionCost();
 					worstCostPos = i;
 				} 
 			}
+			// cout << "1" << endl;
+			// delete ES->at(worstCostPos);
+			// cout << "2" << endl;
 			ES->at(worstCostPos) = s;
 		}
 		// ES worst cost must be updated
+		
 		worstCostES = ES->at(0)->getSolutionCost();
+		
 		worstCostPos = 0;	
 		for(int i = 1 ; i < sizeES ; i++){
 			if(ES->at(i)->getSolutionCost() > worstCostES ){
@@ -189,10 +199,12 @@ bool Mining::updateES(Grafo * s){
 				worstCostPos = i;
 			} 
 		}
+		// cout << "saiu" << endl;
 		return true;
 	}
 	if(iterWNC > 0 || eschanged)
 		oneMoreIWC();
+	// cout << "saiu" << endl;
 	return false;
 }
 
