@@ -431,6 +431,7 @@ void Grafo::GRASP(RFWLocalRandom * random, double alpha){
 void Grafo::solveByPath(RFWLocalRandom * random, bool usePattern, vector<vector<int>*>* elem){
 
     if(usePattern){
+        this->usedPatternSize = elem->size();
         // cout << "using pattern" << endl;
         for(int i = 0; i < elem->size(); i++){
             int vertex_a = elem->at(i)->at(0);

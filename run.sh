@@ -16,43 +16,34 @@ function CTRLC {
 
 
 execpath="./bin/heuristic"
-# instances="./Instances/sergio/*"
+#instances="./Instances/sergio/*"
 instances="./Instances/testing/*"
-declare -a support=(4)
-declare -a algIter=(200)
-declare -a eliteSetSize=(20)
+declare -a support=(3)
+declare -a gamma=(12)
+declare -a eliteSetSize=(10)
 declare -a alphas=(1)
-declare -a execTime=("7.58" "14.54" "4.52" "6.73" "479.40" "843.29")
+declare -a execTime=( "7.59" "14.58" "517.51" "1090.38" "2858.66" "4.53" "1185.03" "4065.35" "5.58" "9.74" "0.05" "0.28" "0.35" "845.94" )
 
 
 
 trap CTRLC SIGINT
 
 timePos=0
-for a in "${alphas[@]}"
+
+for file in $instances
 do
-	for file in $instances
-	do
-		echo $file
-		for p in "${eliteSetSize[@]}"
+	echo $file
+	for ((  s = 1 ;  s <= 1;  s++  )) 
+	do	
+		for g in "${gamma[@]}"
 		do
-			for u in "${support[@]}"
-			do
-
-				for ((  s = 1 ;  s <= 10;  s++  )) 
-				do	
-
-					for i in "${algIter[@]}"
-					do
-						value=${execTime[timePos]}
-						# echo $value
-						EXEC $execpath $file $s 1 $i $p $u $value false >> ./results/dm_vs_regular_time/regular.txt 
-					done
-				done
-			done		
+			# value=${execTime[timePos]}
+			# echo $value
+			EXEC $execpath $file $s 1 200 10 3 -1 true true $g >> ./results/dm/pattern_and_sol_size_analisys.txt 
 		done
-	((timePos=timePos+1))
-	done
+	done	
+((timePos=timePos+1))
 done
+
 
 

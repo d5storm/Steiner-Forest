@@ -57,7 +57,7 @@ class Mining{
 		bool isStableES() { return itersWithoutChange() >= gamma;};
 		double getWorstCostES() { return worstCostES;};
 		int itersWithoutChange() {return iterWNC;};
-		void oneMoreIWC() { iterWNC++; eschanged = false;};
+		void oneMoreIWC() { iterWNC++;};
 		bool EShasChanged(){ return eschanged;};
 		void resetESConfig() { eschanged = false;};
 		bool hasMined() {return mined;};

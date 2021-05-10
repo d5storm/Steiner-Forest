@@ -109,6 +109,8 @@ public:
     Edge* getEdge(int vertex_a, int vertex_b);
     vector<Edge*> * getEdges() {return edges;};
     vector<vector<int>*> getTerminalGroup(int pos);
+    int totalUsedEdges() { return usedEdges->size();}
+    int patternSize() { return usedPatternSize; }
     int getSolutionCost();
     bool isFeasible(){
         return detectCicle() && checkTerminalsMeet()?true:false;
@@ -119,6 +121,8 @@ private:
     bool DFS(int start, int father, vector<int> * visited);
     bool checkTerminalsMeet();
 
+
+    int usedPatternSize = 0;
     list<Nugget*> * solution;
     vector<vector<int>*> * terminals;
     vector<vector<int>*> * adj;

@@ -20,7 +20,6 @@ bool checkiter(bool useIter, double currentIter, double maxIter){
 }
 
 int main(int argc, char *argv[]) {
-
     int seed = stoi(argv[2]);
     RFWRandom::randomize(seed);
     RFWLocalRandom * random = new RFWLocalRandom(seed);
@@ -29,16 +28,29 @@ int main(int argc, char *argv[]) {
     int algIter = stoi(argv[4]);
     int eliteSetSize = stoi(argv[5]);
     int support = stoi(argv[6]);
+    if (support > eliteSetSize){
+        support = eliteSetSize;
+    }
     double execTime = stod(argv[7]);
     bool DM;
+    bool stableDM;
     string dm_string(argv[8]);
+    string dm_stable_string(argv[9]);
+    int gamma = -1;
     if (dm_string.compare("true") == 0)
         DM = true;
     else
         DM = false;
-
-    Mining* mminer = new Mining(eliteSetSize, support, 30, random);
-
+    if (dm_stable_string.compare("true") == 0){
+        gamma = stoi(argv[10]);
+        stableDM = true;
+    }
+    else
+        stableDM = false;
+    // if(stableDM)
+    //     cout << "StableDM!" << " Gamma: " << gamma << endl;
+    // exit(1);
+    Mining* mminer = new Mining(eliteSetSize, support, gamma, random);
     bool useIter = false;
     bool useTime = false;
     if(execTime != -1)
@@ -47,81 +59,99 @@ int main(int argc, char *argv[]) {
         useIter = true;
 
     int bestSol = INT_MAX;
+    
+    int bestSolSize = 0;
+    int bestSolPatternSize = 0;
     double totalTime = 0.0;
+    int avgSolSize = 0;
+    int avgPatternSize = 0;
     int iter = 0;
     Grafo * best = new Grafo(argv[1]);
-    cout << argv[1];
+    
+    // cout << "SEED: " << seed << " INSTANCE: " << argv[1] << endl;
+
+
+
     int iterBestFound = -1;
     int totalEdgeLS = 0;
 
     bool mined = false;
+    int miningIters = 0;
     if (DM && useIter == -1){
         cout << "NUMERO DE ITER NAO INSERIDO" << endl;
         exit(1);
     }
+    cout << argv[1] << " ";
     while(checkTime(useTime, totalTime, execTime) && checkiter(useIter, iter, algIter)){
-        // cout << " ITER: " << iter << endl;
-        if(DM && (iter == algIter / 2 )){
-            // cout << "mining!" << endl;
-            // cin.get();
-            // mminer->printES();
+        if(DM && !stableDM && (iter == algIter / 2 )){
             mminer->map_file();
             mminer->mine();
             mminer->unmapall_file(best->V);
-            // cout << "mined!" << endl;
-            // cin.get();
             mined = true;
+        } else if(DM && stableDM){
+            // if(mminer->isStableES()){
+            //     cout << "ES IS STABLE!" << endl;
+            //     if(mminer->EShasChanged()){
+            //         cout << "ES HAS CHANGED!" << endl;
+            //     } else{
+            //         cout << "ES HAS NOT CHANGED!" << endl;
+            //     }
+            // } else {
+            //     cout << "ES IS NOT STABLE!" << endl;
+            // }
+            if(mminer->isStableES() && mminer->EShasChanged()){
+                // cout << "MINING ESTAVEL!" << endl;
+                // cin.get();
+                mminer->map_file();
+                mminer->mine();
+                mminer->unmapall_file(best->V);
+                mined = true;
+            }
         }
         bool solToES = false;
         Grafo * testLuidi = new Grafo(argv[1]);
-        // cout << totalTime << endl;
         if(!DM || !mined){
-            // cout << "solving not mined" << endl;
             totalTime += testLuidi->solveLuidi(random, 0, &totalEdgeLS, alpha, false, NULL);
-            // cout << "solved not mined" << endl;
         } else{
+            miningIters += 1;
             Pattern * p = mminer->getCurrentPattern();
             mminer->nextPattern();
             totalTime += testLuidi->solveLuidi(random, 0, &totalEdgeLS, alpha, true, p->elements);
-            // cout << "CREATED WITH PATTERN" << endl;
-            // testLuidi->printGraph();
-            // cin.get();
         }
         if(!testLuidi->isFeasible()){
             cout << "Luidi UnFeasible!" << endl;
             exit(-1);
         }
-        if(DM && mminer->updateES(testLuidi) && !mined){
-            solToES = true;
-            // cout << "ATUALIZOU CE" << endl;
-            // mminer->printES();
-            // cin.get();
-				//cout << "Atualizou CE (size: "<<  mminer->getSizeCE() << " worstCost: "<< mminer->getWorstCostES()+numPtsRot <<  " ) - Iteracao: "<< iterCong << " " << temperatura << " " << numOrigPts-melhorSolucao->numRotSob << endl;
-				
-		} else{
-            // cout << "NAO ATUALIZOU CE" << endl;
-            // cin.get();
-        }
+        if(DM){
+            if(!mined || (mined && stableDM)){
+               bool updated = mminer->updateES(testLuidi); 
+                // if(updated)
+                //     cout << "ES UPDATED!" << endl;
+                // else
+                //     cout << "ES NOT UPDATED!" << endl;
+            }	
+		}
         if(testLuidi->getSolutionCost() < bestSol){
+            bestSolSize = testLuidi->totalUsedEdges();
+            bestSolPatternSize = testLuidi->patternSize();
             bestSol = testLuidi->getSolutionCost();
-            // delete best;
             best = testLuidi;
             iterBestFound = iter;
-        } else{
-            if(!solToES){
-                // cout << "deleted sol" << endl;
-                // delete testLuidi;
-            }
         }
-        // cin.get();
         iter++;
+        avgPatternSize += testLuidi->patternSize();
+        avgSolSize += testLuidi->totalUsedEdges();
+        // cout << "SolSize: " << testLuidi->totalUsedEdges() << endl;
     }
     
     // best->printGraph();
-    
     // cout << "EdgeLS: " << totalEdgeLS << endl;
-    cout << " " << iterBestFound << " " << bestSol << " " << totalTime << endl;
+    // cout << " " << iterBestFound << " " << bestSol << " " << totalTime << endl;
+    // cout << "0 " << bestSol << " " << totalTime << endl;
+    cout << "Total Iterations: " << iter << " Total Mined Iters: " << miningIters << " BestSol Size: " << bestSolSize;
+    cout << " BestSol Pattern Size: " << bestSolPatternSize << " Avg. Sol Size: " << ((double) avgSolSize) / iter;
+    cout << " Avg. Pattern Size: " << ((double) avgPatternSize) / miningIters << endl;
     // cin.get();
-    return 1;
+    return 0;
     
 }

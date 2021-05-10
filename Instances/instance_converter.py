@@ -1,5 +1,64 @@
+import random
 import sys
 import os
+
+def convert_to__steiner_forest_instance():
+    original_instances_dir = sys.argv[1]
+    new_instances_dir = sys.argv[2]
+
+    for file_name in os.listdir(original_instances_dir):
+        print(file_name)
+        path = "{}\\{}".format(original_instances_dir, file_name)
+
+        NODES = 0
+        EDGES = ""
+        terminals_list = []
+        # Reading original file data.
+        with open(path) as fp:
+            EOF = False
+            while not EOF:
+                section = False
+                split_line = ""
+                while not section:
+                    read_line = fp.readline()
+                    split_line = read_line.split(" ")
+                    if read_line.strip() == "EOF":
+                        EOF = True
+                        break
+                    if split_line[0].lower() == "section":
+                        section = True
+
+                if not EOF and split_line[1].strip().lower() == "graph":
+                    NODES = int(fp.readline().split(" ")[1])
+                    edges = int(fp.readline().split(" ")[1])
+                    for _ in range(edges):
+                        split_line = fp.readline().split(" ")
+                        v1 = int(split_line[1]) - 1
+                        v2 = int(split_line[2]) - 1
+                        w = int(split_line[3])
+                        line = f"E {v1} {v2} {2}\n"
+                        EDGES += line
+                elif not EOF and split_line[1].strip().lower() == "terminals":
+                    terminals = int(fp.readline().split(" ")[1])
+                    for _ in range(terminals):
+                        terminals_list.append(int(fp.readline().split(" ")[1]))
+            max_number_of_sets = int(len(terminals_list) / 4)
+            number_of_sets = random.randint(2, max_number_of_sets)
+            print(f"Number of Sets: {number_of_sets}")
+            remainder = len(terminals_list)
+            terminals_sets = {}
+            for set in range(number_of_sets - 1):
+                set_size = random.randint(2, remainder - 2*(number_of_sets - (set + 1)))
+                print(f"Set: {set}, Size: {set_size}")
+                terminal_set = []
+                for _ in range(set_size):
+                    terminals_index = random.randint(0, len(terminals_list) - 1)
+                    terminal_set.append(terminals_list[terminals_index])
+                    terminals_list.remove(terminals_list[terminals_index])
+                    remainder = len(terminals_list)
+                terminals_sets[set] = terminal_set
+            terminals_sets[number_of_sets - 1] = terminals_list
+
 
 
 def converter():
@@ -84,4 +143,6 @@ def converter():
                             fp2.write("{} ".format(groups[terminal]))
                     fp2.write("\n")
 
-converter()
+
+if __name__ == "__main__":
+    convert_to__steiner_forest_instance()

@@ -1,0 +1,14 @@
+## This is an example of specifying instances with a file.
+
+# Each line is an instance relative to trainInstancesDir
+# (see scenario.txt.tmpl) and an optional sequence of instance-specific
+# parameters that will be passed to target-runnerx when invoked on that
+# instance.
+
+# Empty lines and comments are ignored.
+
+
+jmp-n-500-a-200-p-025-k-35-s-5192.dat
+jmp-n-100-a-200-p-050-k-15-s-4911.dat
+c07.dat
+c08.dat
