@@ -33,13 +33,13 @@ timePos=0
 for file in $instances
 do
 	echo $file
-	for ((  s = 1 ;  s <= 1;  s++  )) 
+	for ((  s = 1 ;  s <= 10;  s++  )) 
 	do	
 		for g in "${gamma[@]}"
 		do
 			# value=${execTime[timePos]}
 			# echo $value
-			EXEC $execpath $file $s 1 200 10 3 -1 true true $g >> ./results/dm/pattern_and_sol_size_analisys.txt 
+			EXEC $execpath $file $s 1 200 10 3 -1 true true $g  # >> ./results/new_instances_dm.txt 
 		done
 	done	
 ((timePos=timePos+1))

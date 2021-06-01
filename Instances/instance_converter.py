@@ -1,6 +1,126 @@
+import copy
 import random
 import sys
 import os
+
+random.seed(0)
+
+
+def create_random_terminal_sets(terminals_list, tree=False):
+    max_number_of_sets = int(len(terminals_list) / 4)
+    if max_number_of_sets < 2 or tree:
+        new_terminals = [id - 1 for id in terminals_list]
+        return {0: new_terminals}
+    else:
+        number_of_sets = random.randint(2, max_number_of_sets)
+        remainder = len(terminals_list)
+        terminals_sets = {}
+        for set in range(number_of_sets - 1):
+            set_size = random.randint(2, remainder - 2 * (number_of_sets - (set + 1)))
+            terminal_set = []
+            for _ in range(set_size):
+                terminals_index = random.randint(0, len(terminals_list) - 1)
+                terminal_set.append(terminals_list[terminals_index] - 1)
+                terminals_list.remove(terminals_list[terminals_index])
+                remainder = len(terminals_list)
+            terminals_sets[set] = terminal_set
+        terminals_sets[number_of_sets - 1] = terminals_list
+
+        return terminals_sets
+
+
+def create_luidi_terminal_sets(terminals_list):
+    even_pairs = []
+    uneven_pairs = []
+    roundrobin_pairs = []
+    for index in range(0, len(terminals_list), 4):
+        if index + 2 < len(terminals_list):
+            pos_a = terminals_list[index]
+            pos_b = terminals_list[index + 2]
+
+            if pos_a > pos_b:
+                even_pairs.append((pos_b, pos_a))
+            else:
+                even_pairs.append((pos_a, pos_b))
+
+    for index in range(1, len(terminals_list), 4):
+        if index + 2 < len(terminals_list):
+            pos_a = terminals_list[index]
+            pos_b = terminals_list[index + 2]
+
+            if pos_a > pos_b:
+                uneven_pairs.append((pos_b, pos_a))
+            else:
+                uneven_pairs.append((pos_a, pos_b))
+
+    index_2 = len(terminals_list) - 1
+    for index in range(0, int(len(terminals_list) / 2)):
+        pos_a = terminals_list[index]
+        pos_b = terminals_list[index_2]
+        if pos_a > pos_b:
+            roundrobin_pairs.append((pos_b, pos_a))
+        else:
+            roundrobin_pairs.append((pos_a, pos_b))
+        index_2 -= 1
+
+    terminals_set = {}
+    terminal_count = 0
+    used_list = []
+    while len(even_pairs) + len(uneven_pairs) + len(roundrobin_pairs) > 0:
+        if len(roundrobin_pairs) > 0:
+            start = roundrobin_pairs.pop(0)
+            check_list = [start[0], start[1]]
+        elif len(even_pairs) > 0:
+            start = even_pairs.pop(0)
+            check_list = [start[0], start[1]]
+        else:
+            start = uneven_pairs.pop(0)
+            check_list = [start[0], start[1]]
+        terminal_list = []
+        while len(check_list) > 0:
+            terminal = check_list.pop(0)
+            terminal_list.append(terminal - 1)
+            used_list.append(terminal)
+            for_limit = len(roundrobin_pairs)
+            index = 0
+            while index < for_limit:
+                pair = roundrobin_pairs[index]
+                if pair[0] == terminal or pair[1] == terminal:
+                    roundrobin_pairs.pop(index)
+                    for_limit -= 1
+                    if pair[0] not in check_list and pair[0] not in used_list:
+                        check_list.append(pair[0])
+                    if pair[1] not in check_list and pair[1] not in used_list:
+                        check_list.append(pair[1])
+                index += 1
+            for_limit = len(even_pairs)
+            index = 0
+            while index < for_limit:
+                pair = even_pairs[index]
+                if pair[0] == terminal or pair[1] == terminal:
+                    even_pairs.pop(index)
+                    for_limit -= 1
+                    if pair[0] not in check_list and pair[0] not in used_list:
+                        check_list.append(pair[0])
+                    if pair[1] not in check_list and pair[1] not in used_list:
+                        check_list.append(pair[1])
+                index += 1
+            for_limit = len(uneven_pairs)
+            index = 0
+            while index < for_limit:
+                pair = uneven_pairs[index]
+                if pair[0] == terminal or pair[1] == terminal:
+                    uneven_pairs.pop(index)
+                    for_limit -= 1
+                    if pair[0] not in check_list and pair[0] not in used_list:
+                        check_list.append(pair[0])
+                    if pair[1] not in check_list and pair[1] not in used_list:
+                        check_list.append(pair[1])
+                index += 1
+        terminals_set[terminal_count] = terminal_list
+
+        terminal_count += 1
+    return terminals_set
 
 def convert_to__steiner_forest_instance():
     original_instances_dir = sys.argv[1]
@@ -13,6 +133,8 @@ def convert_to__steiner_forest_instance():
         NODES = 0
         EDGES = ""
         terminals_list = []
+        random_terminals = None
+        luidi_terminals = None
         # Reading original file data.
         with open(path) as fp:
             EOF = False
@@ -36,28 +158,57 @@ def convert_to__steiner_forest_instance():
                         v1 = int(split_line[1]) - 1
                         v2 = int(split_line[2]) - 1
                         w = int(split_line[3])
-                        line = f"E {v1} {v2} {2}\n"
+                        line = f"E {v1} {v2} {w}\n"
                         EDGES += line
                 elif not EOF and split_line[1].strip().lower() == "terminals":
                     terminals = int(fp.readline().split(" ")[1])
                     for _ in range(terminals):
                         terminals_list.append(int(fp.readline().split(" ")[1]))
-            max_number_of_sets = int(len(terminals_list) / 4)
-            number_of_sets = random.randint(2, max_number_of_sets)
-            print(f"Number of Sets: {number_of_sets}")
-            remainder = len(terminals_list)
-            terminals_sets = {}
-            for set in range(number_of_sets - 1):
-                set_size = random.randint(2, remainder - 2*(number_of_sets - (set + 1)))
-                print(f"Set: {set}, Size: {set_size}")
-                terminal_set = []
-                for _ in range(set_size):
-                    terminals_index = random.randint(0, len(terminals_list) - 1)
-                    terminal_set.append(terminals_list[terminals_index])
-                    terminals_list.remove(terminals_list[terminals_index])
-                    remainder = len(terminals_list)
-                terminals_sets[set] = terminal_set
-            terminals_sets[number_of_sets - 1] = terminals_list
+            random_terminals = create_random_terminal_sets(copy.deepcopy(terminals_list))
+            tree_terminals = create_random_terminal_sets(copy.deepcopy(terminals_list), tree=True)
+            luidi_terminals = create_luidi_terminal_sets(copy.deepcopy(terminals_list))
+
+        new_file_name = f"{file_name.split('.')[0]}_sft.{file_name.split('.')[1]}"
+
+        path = "{}\\{}".format(new_instances_dir, new_file_name)
+
+        with open(path, "w") as fp2:
+            fp2.write(f"N {NODES}\n")
+            fp2.write(EDGES)
+            for set, terminals in tree_terminals.items():
+                fp2.write("S ")
+                for index in range(len(terminals) - 1):
+                    id = terminals[index]
+                    fp2.write(f"{id} ")
+                fp2.write(f"{terminals[-1]}\n")
+
+        new_file_name = f"{file_name.split('.')[0]}_sf_r.{file_name.split('.')[1]}"
+
+        path = "{}\\{}".format(new_instances_dir, new_file_name)
+
+        with open(path, "w") as fp2:
+            fp2.write(f"N {NODES}\n")
+            fp2.write(EDGES)
+            for set, terminals in random_terminals.items():
+                fp2.write("S ")
+                for index in range(len(terminals) - 1):
+                    id = terminals[index]
+                    fp2.write(f"{id} ")
+                fp2.write(f"{terminals[-1]}\n")
+
+        new_file_name = f"{file_name.split('.')[0]}_sf.{file_name.split('.')[1]}"
+
+        path = "{}\\{}".format(new_instances_dir, new_file_name)
+
+        with open(path, "w") as fp2:
+            fp2.write(f"N {NODES}\n")
+            fp2.write(EDGES)
+            for set, terminals in luidi_terminals.items():
+                fp2.write("S ")
+                for index in range(len(terminals) - 1):
+                    id = terminals[index]
+                    fp2.write(f"{id} ")
+                fp2.write(f"{terminals[-1]}\n")
 
 
 

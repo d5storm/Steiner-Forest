@@ -147,10 +147,10 @@ int main(int argc, char *argv[]) {
     // best->printGraph();
     // cout << "EdgeLS: " << totalEdgeLS << endl;
     // cout << " " << iterBestFound << " " << bestSol << " " << totalTime << endl;
-    // cout << "0 " << bestSol << " " << totalTime << endl;
-    cout << "Total Iterations: " << iter << " Total Mined Iters: " << miningIters << " BestSol Size: " << bestSolSize;
-    cout << " BestSol Pattern Size: " << bestSolPatternSize << " Avg. Sol Size: " << ((double) avgSolSize) / iter;
-    cout << " Avg. Pattern Size: " << ((double) avgPatternSize) / miningIters << endl;
+    cout << "0 " << bestSol << " " << totalTime << endl;
+    // cout << "Total Iterations: " << iter << " Total Mined Iters: " << miningIters << " BestSol Size: " << bestSolSize;
+    // cout << " BestSol Pattern Size: " << bestSolPatternSize << " Avg. Sol Size: " << ((double) avgSolSize) / iter;
+    // cout << " Avg. Pattern Size: " << ((double) avgPatternSize) / miningIters << endl;
     // cin.get();
     return 0;
     
