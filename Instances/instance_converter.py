@@ -211,6 +211,40 @@ def convert_to__steiner_forest_instance():
                 fp2.write(f"{terminals[-1]}\n")
 
 
+def convert_to_luidi():
+    original_instances_dir = sys.argv[1]
+    new_instances_dir = sys.argv[2]
+
+    for file_name in os.listdir(original_instances_dir):
+        path = "{}\\{}".format(original_instances_dir, file_name)
+        with open(path) as fp:
+            N = fp.readline().split(" ")[1].strip()
+            E_number = 0
+            E = ""
+            S = []
+            EOF = False
+            while not EOF:
+                read_line = fp.readline()
+                if read_line.strip() == "":
+                    EOF = True
+                    break
+                split_line = read_line.split(" ")
+                if split_line[0] == "E":
+                    E_number += 1
+                    E += f"{int(split_line[1]) + 1} {int(split_line[2]) + 1} {split_line[3].strip()} 1\n"
+                else:
+                    for i in range(1, len(split_line) - 1):
+                        S.append(f"{int(split_line[i]) + 1} {int(split_line[i + 1].strip()) + 1}")
+
+            path_new = "{}\\{}".format(new_instances_dir, file_name)
+            with open(path_new, "w") as fp2:
+                fp2.write(f"{N} {E_number}\n")
+                fp2.write(E)
+                fp2.write(f"{len(S)}\n")
+                for x in S:
+                    fp2.write(f"{x}\n")
+                fp2.write("6\n1\n13\n499")
+
 
 def converter():
     original_instances_dir = sys.argv[1]
@@ -296,4 +330,5 @@ def converter():
 
 
 if __name__ == "__main__":
-    convert_to__steiner_forest_instance()
+    convert_to_luidi()
+    # convert_to__steiner_forest_instance()
