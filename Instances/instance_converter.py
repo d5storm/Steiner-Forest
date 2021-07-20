@@ -6,6 +6,62 @@ import os
 random.seed(0)
 
 
+def ghalami_to_luidi():
+    original_instances_dir = sys.argv[1]
+    new_instances_dir = sys.argv[2]
+
+    for file_name in os.listdir(original_instances_dir):
+        print(file_name)
+        path = "{}/{}".format(original_instances_dir, file_name)
+
+        NODES = 0
+        EDGES = ""
+        terminals_list = ""
+        # Reading original file data.
+        with open(path) as fp:
+            terminals_read = False
+            EOF = False
+            while not EOF:
+                section = False
+                split_line = ""
+                while not section:
+                    read_line = fp.readline()
+                    split_line = read_line.split(" ")
+                    if read_line.strip() == "END" and terminals_read:
+                        EOF = True
+                        break
+                    if split_line[0].lower() == "section":
+                        section = True
+
+                if not EOF and split_line[1].strip().lower() == "graph":
+                    NODES = int(fp.readline().split(" ")[1])
+                    edges = int(fp.readline().split(" ")[1])
+                    for _ in range(edges):
+                        split_line = fp.readline().split(" ")
+                        v1 = int(split_line[1]) - 1
+                        v2 = int(split_line[2]) - 1
+                        w = int(split_line[3])
+                        line = f"E {v1} {v2} {w}\n"
+                        EDGES += line
+                elif not EOF and split_line[1].strip().lower() == "terminals":
+                    terminals_read = True
+                    terminals = int(int(fp.readline().split(" ")[1]) / 2)
+                    for _ in range(terminals):
+                        split_terminals = fp.readline().split(" ")
+                        terminal_a = int(split_terminals[1]) - 1
+                        terminal_b = int(split_terminals[2]) - 1
+                        terminals_list += f"S {terminal_a} {terminal_b}\n"
+
+        new_file_name = f"{file_name.split('.')[0]}_sft.{file_name.split('.')[1]}"
+
+        path = "{}/{}".format(new_instances_dir, new_file_name)
+
+        with open(path, "w") as fp2:
+            fp2.write(f"N {NODES}\n")
+            fp2.write(EDGES)
+            fp2.write(terminals_list)
+
+
 def create_random_terminal_sets(terminals_list, tree=False):
     max_number_of_sets = int(len(terminals_list) / 4)
     if max_number_of_sets < 2 or tree:
@@ -121,6 +177,7 @@ def create_luidi_terminal_sets(terminals_list):
 
         terminal_count += 1
     return terminals_set
+
 
 def convert_to__steiner_forest_instance():
     original_instances_dir = sys.argv[1]
@@ -330,5 +387,4 @@ def converter():
 
 
 if __name__ == "__main__":
-    convert_to_luidi()
-    # convert_to__steiner_forest_instance()
+    ghalami_to_luidi()
