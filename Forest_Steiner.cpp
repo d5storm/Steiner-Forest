@@ -902,50 +902,40 @@ bool Grafo::relocateLocalSearch(){
     return false;
 }
 
-double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalEdgeLS, double alpha, bool usePattern, vector<vector<int>*> * elem){
+double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalEdgeLS, double alpha, bool usePattern, vector<vector<int>*> * elem, bool useTarget, int target){
     auto start = std::chrono::system_clock::now();
     solveByPath(random, usePattern, elem);
-    // GRASP(random, alpha);
+    if (useTarget && this->getSolutionCost() <= target){
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end-start;
+        createSteinerForestAdj();
+        cout << "construtivo" << " ";
+        return (double)elapsed_seconds.count();
+    }
     
     createSteinerForestAdj();
     
-    // int starting = this->getSolutionCost();
-    // if(this->isFeasible()){
-    //     cout << "Luidi Feasible!" << endl;
-    // }else{
-    //     cout << "Luidi UnFeasible!" << endl;
-    // }
-    // cin.get();
     int pCost;
-    // if(usePattern){
-    //     cout << "CREATED WITH PATTERN" << endl;
-    //     printGraph();
-    //     cin.get();
-    // }
     bool BLimproved = true;
     bool tryEdge = false;
     int BLITers = 0;
     while(BLimproved){
-    //     BLimproved = relocateLocalSearch();
-    //     if(BLimproved)
-    //         continue;
         BLimproved = removeEdgeLocalSearch(true);
+        BLITers++;
+        if (useTarget && this->getSolutionCost() <= target){
+            auto end = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = end-start;
+            createSteinerForestAdj();
+            cout << "buscalocal_" << BLITers << " ";
+            return (double)elapsed_seconds.count();
+        }
+        
     }
-    // cout << "BLIters: " << BLITers << endl;
-    // cout << "Cost: " << this->getSolutionCost() << endl;
-    // cin.get();
-    // vector<vector<Edge*>*>* components = getConnectedComponents();
-    // removeCiclesWithPrim(components);
-    createSteinerForestAdj();
+
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
-    
-    // if(this->isFeasible()){
-    //     cout << "Luidi Feasible!" << endl;
-    // }else{
-    //     cout << "Luidi UnFeasible!" << endl;
-    // }
-    // cin.get();
+    createSteinerForestAdj();
+
     return (double)elapsed_seconds.count();
 }
 
@@ -1040,22 +1030,22 @@ void Grafo::printGraph(){
     }
     cout << "Cost: " << getSolutionCost() << endl;
 
-    // cout << "\n******************GRAPHVIZ******************" << endl;
-    // vector<string> colors = {"red", "blue", "yellow", "purple", "brown", "green", "burlywood", "darkgoldenrod3", "turquoise1", "orangered4"};
+    cout << "\n******************GRAPHVIZ******************" << endl;
+    vector<string> colors = {"red", "blue", "yellow", "purple", "brown", "green", "burlywood", "darkgoldenrod3", "turquoise1", "orangered4"};
 
-    // for(unsigned int i = 0; i < edges->size(); i++){
-    //     if(edges->at(i)->usedEdge){
-    //         cout << edges->at(i)->vertex_a << " -- " << edges->at(i)->vertex_b << " [label=\"" <<  edges->at(i)->weight << "\"]"  << ";" << endl; 
-    //     }
-    // }
-    // cout << "Colors: " << colors.size() << " T: " << terminals->size() << endl;
-    // for(unsigned int t = 0; t < terminals->size(); t++){
-    //     for(unsigned int t1 = 0; t1 < terminals->at(t)->size(); t1++){
-    //         cout << terminals->at(t)->at(t1) << " [color=" << colors[t] << "];" << endl;
-    //     }
-    // }
+    for(unsigned int i = 0; i < edges->size(); i++){
+        if(edges->at(i)->usedEdge){
+            cout << edges->at(i)->vertex_a << " -- " << edges->at(i)->vertex_b << " [label=\"" <<  edges->at(i)->weight << "\"]"  << ";" << endl; 
+        }
+    }
+    cout << "Colors: " << colors.size() << " T: " << terminals->size() << endl;
+    for(unsigned int t = 0; t < terminals->size(); t++){
+        for(unsigned int t1 = 0; t1 < terminals->at(t)->size(); t1++){
+            cout << terminals->at(t)->at(t1) << " [color=" << colors[t] << "];" << endl;
+        }
+    }
 
-    // cout << endl;
+    cout << endl;
 }
 
 void Grafo::useEdge(int e){

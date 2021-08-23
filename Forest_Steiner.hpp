@@ -103,7 +103,7 @@ public:
     // list<int> *adj; // adjacent list
     Grafo(string path); // constructor
     double solvePrim(RFWLocalRandom * random, int seed, int iter);
-    double solveLuidi(RFWLocalRandom * random, int perturbation, int * totalEdgeLS, double alpha, bool usePattern, vector<vector<int>*> * elem);
+    double solveLuidi(RFWLocalRandom * random, int perturbation, int * totalEdgeLS, double alpha, bool usePattern, vector<vector<int>*> * elem, bool useTarget, int target);
     void printGraph();
     Edge* getEdge(int id);
     Edge* getEdge(int vertex_a, int vertex_b);

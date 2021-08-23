@@ -47,13 +47,20 @@ int main(int argc, char *argv[]) {
     }
     else
         stableDM = false;
+    
+    int target = stoi(argv[11]);
+    bool useTarget = false;
+    if (target > 0) {
+        useTarget = true;
+    }
+
     // if(stableDM)
     //     cout << "StableDM!" << " Gamma: " << gamma << endl;
     // exit(1);
     Mining* mminer = new Mining(eliteSetSize, support, gamma, random);
     bool useIter = false;
     bool useTime = false;
-    if(execTime != -1)
+    if(execTime != -1 && !useTarget)
         useTime = true;
     else if(algIter != -1)
         useIter = true;
@@ -111,12 +118,12 @@ int main(int argc, char *argv[]) {
         bool solToES = false;
         Grafo * testLuidi = new Grafo(argv[1]);
         if(!DM || !mined){
-            totalTime += testLuidi->solveLuidi(random, 0, &totalEdgeLS, alpha, false, NULL);
+            totalTime += testLuidi->solveLuidi(random, 0, &totalEdgeLS, alpha, false, NULL, useTarget, target);
         } else{
             miningIters += 1;
             Pattern * p = mminer->getCurrentPattern();
             mminer->nextPattern();
-            totalTime += testLuidi->solveLuidi(random, 0, &totalEdgeLS, alpha, true, p->elements);
+            totalTime += testLuidi->solveLuidi(random, 0, &totalEdgeLS, alpha, true, p->elements, useTarget, target);
         }
         if(!testLuidi->isFeasible()){
             cout << "Luidi UnFeasible!" << endl;
@@ -131,6 +138,11 @@ int main(int argc, char *argv[]) {
                 //     cout << "ES NOT UPDATED!" << endl;
             }	
 		}
+        if(useTarget && testLuidi->getSolutionCost() <= target){
+            cout << iter << " " << totalTime << " " << testLuidi->getSolutionCost() << " " << target << " " << execTime << endl;
+            // cin.get();
+            return 0;
+        }
         if(testLuidi->getSolutionCost() < bestSol){
             bestSolSize = testLuidi->totalUsedEdges();
             bestSolPatternSize = testLuidi->patternSize();
@@ -144,10 +156,11 @@ int main(int argc, char *argv[]) {
         // cout << "SolSize: " << testLuidi->totalUsedEdges() << endl;
     }
     
-    // best->printGraph();
+    best->printGraph();
+    // cin.get();
     // cout << "EdgeLS: " << totalEdgeLS << endl;
     // cout << " " << iterBestFound << " " << bestSol << " " << totalTime << endl;
-    cout << "0 " << bestSol << " " << totalTime << endl;
+    // cout << "0 " << bestSol << " " << totalTime << endl;
     // cout << "Total Iterations: " << iter << " Total Mined Iters: " << miningIters << " BestSol Size: " << bestSolSize;
     // cout << " BestSol Pattern Size: " << bestSolPatternSize << " Avg. Sol Size: " << ((double) avgSolSize) / iter;
     // cout << " Avg. Pattern Size: " << ((double) avgPatternSize) / miningIters << endl;

@@ -30,10 +30,10 @@ def main():
             }
 
     with open(final_file, "w") as fp:
-        fp.write("Instância,best,media,tempo\n")
+        fp.write("Instância;best;media;tempo\n")
         for file, values in instances_dict.items():
-            fp.write(f"{file},{values['best']},{(values['avg'] / values['occurrence']):.2f},"
-                     f"{(values['time'] / values['occurrence']):.2f}\n")
+            fp.write(f"{file};{values['best']};{(values['avg'] / values['occurrence']):.7f};"
+                     f"{(values['time'] / values['occurrence']):.7f}\n")
 
 
 if __name__ == "__main__":

@@ -387,4 +387,4 @@ def converter():
 
 
 if __name__ == "__main__":
-    ghalami_to_luidi()
+    convert_to_luidi()
