@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     int iter = 0;
     Grafo * best = new Grafo(argv[1]);
     
-    // cout << "SEED: " << seed << " INSTANCE: " << argv[1] << endl;
+    cout << "SEED: " << seed << " INSTANCE: " << argv[1] << endl;
 
 
 
@@ -155,7 +155,6 @@ int main(int argc, char *argv[]) {
         avgSolSize += testLuidi->totalUsedEdges();
         // cout << "SolSize: " << testLuidi->totalUsedEdges() << endl;
     }
-    
     best->printGraph();
     // cin.get();
     // cout << "EdgeLS: " << totalEdgeLS << endl;

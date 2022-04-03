@@ -17,7 +17,7 @@ function CTRLC {
 
 execpath="./bin/heuristic"
 #instances="./Instances/sergio/*"
-instances="./Instances/novas_ghalami/mappped/*"
+instances="./Instances/novas_ghalami/teste_viabilidade/*"
 declare -a support=(3)
 declare -a gamma=(12)
 declare -a eliteSetSize=(10)
@@ -35,13 +35,13 @@ targetPos=0
 for file in $instances
 do
 	# echo $file
-	for ((  s = 1 ;  s <= 200;  s++  )) 
+	for ((  s = 1 ;  s <= 1;  s++  )) 
 	do	
 		for g in "${gamma[@]}"
 		do
 			target=${target[targetPos]}
 			time=${execTime[timePos]}
-			EXEC $execpath $file $s 1 200 10 3 $time true true $g $target >> ./results/ghalami/ttt_plot.txt 
+			EXEC $execpath $file $s 1 200 10 3 -1 false false $g 0 #>> ./results/ghalami/ttt_plot.txt 
 		done
 	done	
 ((timePos=timePos+1))

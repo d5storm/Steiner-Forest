@@ -912,7 +912,6 @@ double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalE
         cout << "construtivo" << " ";
         return (double)elapsed_seconds.count();
     }
-    
     createSteinerForestAdj();
     
     int pCost;
@@ -996,6 +995,22 @@ void Grafo::printGraph(){
     //     cout << endl;
     // }
 
+    cout << "Printing Used Edges For Cplex:" << endl;
+    int total_chars = 14;
+    for(unsigned int i = 0; i < edges->size(); i++){
+        if(edges->at(i)->usedEdge){
+            string vertex_a = std::to_string(edges->at(i)->vertex_a + 1);
+            string vertex_b = std::to_string(edges->at(i)->vertex_b + 1);
+            int separators = total_chars - vertex_a.size() - vertex_b.size();
+            cout << "x";
+            for (int s = 0; s < separators; s++){
+                cout << "_";
+            }
+            cout << vertex_a << "_" << vertex_b  << " = 1"<< endl;
+        }
+    }
+    cout << endl;
+
     cout << "Used Edges:" << endl;
     for(unsigned int i = 0; i < edges->size(); i++){
         if(edges->at(i)->usedEdge)
@@ -1033,19 +1048,21 @@ void Grafo::printGraph(){
     cout << "\n******************GRAPHVIZ******************" << endl;
     vector<string> colors = {"red", "blue", "yellow", "purple", "brown", "green", "burlywood", "darkgoldenrod3", "turquoise1", "orangered4"};
 
+
+
     for(unsigned int i = 0; i < edges->size(); i++){
         if(edges->at(i)->usedEdge){
             cout << edges->at(i)->vertex_a << " -- " << edges->at(i)->vertex_b << " [label=\"" <<  edges->at(i)->weight << "\"]"  << ";" << endl; 
         }
     }
-    cout << "Colors: " << colors.size() << " T: " << terminals->size() << endl;
+
     for(unsigned int t = 0; t < terminals->size(); t++){
         for(unsigned int t1 = 0; t1 < terminals->at(t)->size(); t1++){
-            cout << terminals->at(t)->at(t1) << " [color=" << colors[t] << "];" << endl;
+            cout << terminals->at(t)->at(t1) << " [label= TERMINAL_" << t << "];" << endl;
         }
     }
 
-    cout << endl;
+    // cout << endl;
 }
 
 void Grafo::useEdge(int e){
