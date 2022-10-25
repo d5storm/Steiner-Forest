@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     int seed = stoi(argv[2]);
     RFWRandom::randomize(seed);
     RFWLocalRandom * random = new RFWLocalRandom(seed);
-    
+
     double alpha = stoi(argv[3]) / 10.0;
     int algIter = stoi(argv[4]);
     int eliteSetSize = stoi(argv[5]);
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     }
     else
         stableDM = false;
-    
+
     int target = stoi(argv[11]);
     bool useTarget = false;
     if (target > 0) {
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
         useIter = true;
 
     int bestSol = INT_MAX;
-    
+
     int bestSolSize = 0;
     int bestSolPatternSize = 0;
     double totalTime = 0.0;
@@ -74,8 +74,8 @@ int main(int argc, char *argv[]) {
     int avgPatternSize = 0;
     int iter = 0;
     Grafo * best = new Grafo(argv[1]);
-    
-    cout << "SEED: " << seed << " INSTANCE: " << argv[1] << endl;
+
+    // cout << "SEED: " << seed << " INSTANCE: " << argv[1] << endl;
 
 
 
@@ -96,6 +96,7 @@ int main(int argc, char *argv[]) {
             mminer->unmapall_file(best->V);
             mined = true;
         } else if(DM && stableDM){
+            // cout << "MINERACAO POR ESTABILIDADE" << endl;
             // if(mminer->isStableES()){
             //     cout << "ES IS STABLE!" << endl;
             //     if(mminer->EShasChanged()){
@@ -114,6 +115,8 @@ int main(int argc, char *argv[]) {
                 mminer->unmapall_file(best->V);
                 mined = true;
             }
+        } else{
+            // cout << "deu ruim" << endl;
         }
         bool solToES = false;
         Grafo * testLuidi = new Grafo(argv[1]);
@@ -131,12 +134,12 @@ int main(int argc, char *argv[]) {
         }
         if(DM){
             if(!mined || (mined && stableDM)){
-               bool updated = mminer->updateES(testLuidi); 
+               bool updated = mminer->updateES(testLuidi);
                 // if(updated)
                 //     cout << "ES UPDATED!" << endl;
                 // else
                 //     cout << "ES NOT UPDATED!" << endl;
-            }	
+            }
 		}
         if(useTarget && testLuidi->getSolutionCost() <= target){
             cout << iter << " " << totalTime << " " << testLuidi->getSolutionCost() << " " << target << " " << execTime << endl;
@@ -155,7 +158,38 @@ int main(int argc, char *argv[]) {
         avgSolSize += testLuidi->totalUsedEdges();
         // cout << "SolSize: " << testLuidi->totalUsedEdges() << endl;
     }
-    best->printGraph();
+
+    // cout << "Final Mining" << endl;
+    // mminer->map_file();
+    // mminer->mine();
+    // mminer->unmapall_file(best->V);
+    // mminer->printParsedPatterns();
+
+
+    // cout << "1" << endl;
+    // cout << best->totalUsedEdges() << endl;
+    // int printed_edges= 0;
+    // for (int e = 0; e < best->E; e++){
+    //     Edge * edge = best->getEdge(e);
+    //     if(edge->usedEdge){
+    //         int vertex_a = edge->vertex_a + 1;
+	// 		int vertex_b = edge->vertex_b + 1;
+	// 		cout << "x";
+	// 		string code = to_string(vertex_a) + "_" + to_string(vertex_b);
+	// 		if (vertex_a > vertex_b)
+	// 			code = to_string(vertex_b) + "_" + to_string(vertex_a);
+	// 		int total_chars = 1 + code.size();
+	// 		for (int size = 0; size < (16 - total_chars); size++){
+	// 			cout << "_";
+	// 		}
+	// 		cout << code << endl;
+    //         printed_edges++;
+    //     }
+    //     if (printed_edges == best->totalUsedEdges())
+    //         break;
+    // }
+    cout << totalTime << endl;
+
     // cin.get();
     // cout << "EdgeLS: " << totalEdgeLS << endl;
     // cout << " " << iterBestFound << " " << bestSol << " " << totalTime << endl;
@@ -165,5 +199,5 @@ int main(int argc, char *argv[]) {
     // cout << " Avg. Pattern Size: " << ((double) avgPatternSize) / miningIters << endl;
     // cin.get();
     return 0;
-    
+
 }

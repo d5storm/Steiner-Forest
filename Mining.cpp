@@ -21,7 +21,7 @@ Mining::Mining(int _sizeES, int _suporte, int _gamma, RFWLocalRandom * random){
 Mining::~Mining(){
 	for(int i = 0; i < sizeES; i++)
 		delete (ES->at(i));
-	delete(ES);	
+	delete(ES);
 	for(int i = 0; i < nPatterns; i++){
 		//listOfPatterns[i]->~Pattern();
 		delete (listOfPatterns->at(i));
@@ -30,28 +30,28 @@ Mining::~Mining(){
 }
 
 void Mining::mine(int nMaxPatterns){
-	
+
 	if(listOfPatterns == NULL){
 		listOfPatterns = new vector<Pattern*>(nMaxPatterns);
 	}
-	
+
 	// New patterns to be mined
 	nPatterns = 0;
-	
+
 	ostringstream buffer;
-	buffer.str("");		
+	buffer.str("");
 /*
    Exemplo de utilização:
-   	   fpmax_hnmp <semente> <id_arq_tmp> <banco de dados> <tam. do banco> <suporte minimo> <qtd de padroes> <arq. saida> 
+   	   fpmax_hnmp <semente> <id_arq_tmp> <banco de dados> <tam. do banco> <suporte minimo> <qtd de padroes> <arq. saida>
 */
-	buffer 
-			<< "miner/fpmax_hnmp " 
-			<< "1 " 
-			<< (random->GetRand() % 100) 
-			<< " miner/bd.txt " 
+	buffer
+			<< "miner/fpmax_hnmp "
+			<< "1 "
+			<< (random->GetRand() % 100)
+			<< " miner/bd.txt "
 			<<  sizeES
-			<< " " << min_sup 
-			<< " " << nMaxPatterns 
+			<< " " << min_sup
+			<< " " << nMaxPatterns
 			<< " miner/padroes.txt" ;
 	int s = system(buffer.str().c_str());
 	if(s != 0){ cout << "ERROR: function system cannot be performed." << endl; exit(1);}
@@ -64,10 +64,10 @@ void Mining::mine(int nMaxPatterns){
 
 // Mapeia soluções elite e printa em um arquivo.
 void Mining::map_file(){
-	ofstream in("miner/bd.txt"); 
-	if(!in) { 
-		cout << "Cannot open file."; 
-		return ; 
+	ofstream in("miner/bd.txt");
+	if(!in) {
+		cout << "Cannot open file.";
+		return ;
 	}
 
 	for(int i=0 ; i< sizeES ; i++){
@@ -89,7 +89,7 @@ void Mining::map_file(){
 		}
 		in << "\n";
 	}
-	in.close(); 
+	in.close();
 	return;
 }
 
@@ -99,7 +99,7 @@ void Mining::map_file(){
 void Mining::unmapall_file(int n){
 	FILE *fp = fopen("miner/padroes.txt", "r");
 	if(!fp) { cout << "ERROR: Could not open padroes.txt file." << endl;  exit(1);}
-	
+
 	int r, supp, tam;
 	// // Ler o tamanho e o suporte do padrão corrente
 	r = fscanf(fp, "%d;%d;", &tam, &supp);
@@ -117,15 +117,15 @@ void Mining::unmapall_file(int n){
 		cout << "Re-MINE: " << min_sup << endl;
 		mine();
 
-		
+
 	}else{
 		min_sup = min_sup_orig;
 	}
 	while(r == 2){
 		int elem;
-		
+
 		for(int i = 0; i < tam; i++){
-			
+
 			int l = fscanf(fp, "%d", &elem);
 			// cout << "elem: " << elem << endl;
 			// cin.get();
@@ -175,13 +175,13 @@ bool Mining::updateES(Grafo * s){
 			// cout << "blei" << endl;
 			worstCostES = ES->at(0)->getSolutionCost();
 			// cout << "worstCost " << worstCostES << endl;
-			worstCostPos = 0;	
+			worstCostPos = 0;
 			for(int i = 1 ; i < sizeES ; i++){
 				// cout << "i: " << i << endl;
 				if(ES->at(i)->getSolutionCost() > worstCostES ){
 					worstCostES = ES->at(i)->getSolutionCost();
 					worstCostPos = i;
-				} 
+				}
 			}
 			// cout << "1" << endl;
 			// delete ES->at(worstCostPos);
@@ -189,15 +189,15 @@ bool Mining::updateES(Grafo * s){
 			ES->at(worstCostPos) = s;
 		}
 		// ES worst cost must be updated
-		
+
 		worstCostES = ES->at(0)->getSolutionCost();
-		
-		worstCostPos = 0;	
+
+		worstCostPos = 0;
 		for(int i = 1 ; i < sizeES ; i++){
 			if(ES->at(i)->getSolutionCost() > worstCostES ){
 				worstCostES = ES->at(i)->getSolutionCost();
 				worstCostPos = i;
-			} 
+			}
 		}
 		// cout << "saiu" << endl;
 		return true;
@@ -213,6 +213,28 @@ void Mining::printES(){
 		cout << "Solução " << i << ":" << endl << "\t";
 		ES->at(i)->printGraph();
 		cout << "Custo " << ES->at(i)->getSolutionCost() << endl;
+	}
+}
+
+void Mining::printParsedPatterns(){
+	cout << getNumberOfPatterns() << endl;
+	for(int i = 0; i < getNumberOfPatterns(); i++){
+		Pattern * pattern = getCurrentPattern();
+		nextPattern();
+		cout << pattern->size << endl;
+		for(int j = 0; j < pattern->size; j++){
+			int vertex_a = pattern->elements->at(j)->at(0) + 1;
+			int vertex_b = pattern->elements->at(j)->at(1) + 1;
+			cout << "x";
+			string code = to_string(vertex_a) + "_" + to_string(vertex_b);
+			if (vertex_a > vertex_b)
+				code = to_string(vertex_b) + "_" + to_string(vertex_a);
+			int total_chars = 1 + code.size();
+			for (int size = 0; size < (16 - total_chars); size++){
+				cout << "_";
+			}
+			cout << code << endl;
+		}
 	}
 }
 

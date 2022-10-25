@@ -22,7 +22,7 @@
 #include <dirent.h>
 #include <ostream>
 #include <chrono>
-#include <queue> 
+#include <queue>
 #include "./src/spgsolver.h"
 #include "./src/graph.h"
 #include "./src/rfw_random.h"
@@ -59,7 +59,7 @@ class Edge
         this->usedEdge = true;
         this->appearance++;
     }
-    void forceUnUseEdge(){ 
+    void forceUnUseEdge(){
         this->appearance = 0;
         this->usedEdge = false;
     }
@@ -158,13 +158,13 @@ private:
     vector<int>* addTerminalGroup();
     vector<vector<Edge*>*>* getConnectedComponents();
     void removeCiclesWithPrim(vector<vector<Edge*>*>* components);
-    
+
     void solveByPath(RFWLocalRandom * random, bool usePattern, vector<vector<int>*> * elem);
     void GRASP(RFWLocalRandom * random, double alpha);
     void construct(vector<std::pair<int,int>> * pairs, vector<vector<int>*> * adj, RFWLocalRandom * random);
     void constructGrasp(vector<std::pair<int,int>> * pairs, RFWLocalRandom * random, double alpha);
     list<Edge*> * connectTwoVertexDijkstra(int vertex_source, int vertex_dest, vector<vector<int>*> * matrix);
-    int minDistance(vector<int> dist, vector<bool> sptSet);  
+    int minDistance(vector<int> dist, vector<bool> sptSet);
     void addToPath(vector<int> parent, int j, list<Edge*>* usedEdgesOnPath);
 };
 

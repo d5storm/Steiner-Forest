@@ -14,11 +14,11 @@ vector<string> split(string str, char delimiter) {
   vector<string> internal;
   stringstream ss(str); // Turn the string into a stream.
   string tok;
- 
+
   while(getline(ss, tok, delimiter)) {
     internal.push_back(tok);
   }
- 
+
   return internal;
 }
 
@@ -29,6 +29,10 @@ void Grafo::clearUnusedPatternEdges(){
             edge->forceUnUseEdge();
         }
     }
+}
+
+Edge * Grafo::getEdge(int pos){
+    return edges->at(pos);
 }
 
 Edge * Grafo::getEdge(int vertex_a, int vertex_b){
@@ -98,7 +102,7 @@ Grafo::Grafo(string path){
             // for(unsigned int i = 1; i < split_line.size(); i++){
             //     cout << stoi(split_line[i]) << " ";
             // }
-            // cout << endl; 
+            // cout << endl;
             // cin.get();
             for(unsigned int i = 1; i < split_line.size(); i++){
                 terminalGroup->push_back(stoi(split_line[i]));
@@ -118,7 +122,7 @@ vector<int>* Grafo::addTerminalGroup(){
 
 void Grafo::addToPath(vector<int> parent, int j, list<Edge*>* usedEdgesOnPath){
     if(parent[j] < 0) return;
-    
+
     addToPath(parent, parent[j], usedEdgesOnPath);
     Edge * edge = getEdge(j, parent[j]);
     usedEdgesOnPath->push_back(edge);
@@ -126,100 +130,100 @@ void Grafo::addToPath(vector<int> parent, int j, list<Edge*>* usedEdgesOnPath){
 
 }
 
-int Grafo::minDistance(vector<int> dist, vector<bool> sptSet) 
-{ 
-      
-    // Initialize min value 
-    int min = 99999999, min_index; 
-  
-    for (int v = 0; v < V; v++) 
-        if (sptSet[v] == false && 
-                   dist[v] <= min) 
-            min = dist[v], min_index = v; 
-  
-    return min_index; 
-} 
+int Grafo::minDistance(vector<int> dist, vector<bool> sptSet)
+{
+
+    // Initialize min value
+    int min = 99999999, min_index;
+
+    for (int v = 0; v < V; v++)
+        if (sptSet[v] == false &&
+                   dist[v] <= min)
+            min = dist[v], min_index = v;
+
+    return min_index;
+}
 
 list<Edge*> * Grafo::connectTwoVertexDijkstra(int vertex_source, int vertex_dest, vector<vector<int>*> * matrix){
-    
 
-    vector<int> dist(V);  
-    vector<bool> sptSet(V); 
 
-    vector<int> parent(V); 
-  
-    for (int i = 0; i < V; i++) 
-    { 
-        parent[vertex_source] = -1; 
-        dist[i] = 99999999; 
-        sptSet[i] = false; 
-    } 
+    vector<int> dist(V);
+    vector<bool> sptSet(V);
 
-    dist[vertex_source] = 0; 
-  
-    // Find shortest path 
-    // for all vertices 
-    for (int count = 0; count < V - 1; count++) 
-    { 
-        // Pick the minimum distance 
-        // vertex from the set of 
-        // vertices not yet processed.  
-        // u is always equal to src 
-        // in first iteration. 
-        int u = minDistance(dist, sptSet); 
-  
-        // Mark the picked vertex  
-        // as processed 
-        sptSet[u] = true; 
-  
-        // Update dist value of the  
-        // adjacent vertices of the 
-        // picked vertex. 
-        for (int v = 0; v < V; v++){ 
-  
-            // Update dist[v] only if is 
-            // not in sptSet, there is 
-            // an edge from u to v, and  
-            // total weight of path from 
-            // src to v through u is smaller 
-            // than current value of 
-            // dist[v] 
-            if (!sptSet[v] && matrix->at(u)->at(v) > -1 && 
-                dist[u] + matrix->at(u)->at(v) < dist[v]) 
-            { 
-                parent[v] = u; 
-                dist[v] = dist[u] + matrix->at(u)->at(v); 
-            }  
+    vector<int> parent(V);
+
+    for (int i = 0; i < V; i++)
+    {
+        parent[vertex_source] = -1;
+        dist[i] = 99999999;
+        sptSet[i] = false;
+    }
+
+    dist[vertex_source] = 0;
+
+    // Find shortest path
+    // for all vertices
+    for (int count = 0; count < V - 1; count++)
+    {
+        // Pick the minimum distance
+        // vertex from the set of
+        // vertices not yet processed.
+        // u is always equal to src
+        // in first iteration.
+        int u = minDistance(dist, sptSet);
+
+        // Mark the picked vertex
+        // as processed
+        sptSet[u] = true;
+
+        // Update dist value of the
+        // adjacent vertices of the
+        // picked vertex.
+        for (int v = 0; v < V; v++){
+
+            // Update dist[v] only if is
+            // not in sptSet, there is
+            // an edge from u to v, and
+            // total weight of path from
+            // src to v through u is smaller
+            // than current value of
+            // dist[v]
+            if (!sptSet[v] && matrix->at(u)->at(v) > -1 &&
+                dist[u] + matrix->at(u)->at(v) < dist[v])
+            {
+                parent[v] = u;
+                dist[v] = dist[u] + matrix->at(u)->at(v);
+            }
         }
-    } 
-    
-    
+    }
+
+
 
     // cout << "parent vector: " << endl;
-    // for (int v = 0; v < parent.size(); v++){ 
+    // for (int v = 0; v < parent.size(); v++){
     //     cout << parent[v] << " ";
     // }
     // cout << endl;
     // cout << "dist vector: " << endl;
-    // for (int v = 0; v < parent.size(); v++){ 
+    // for (int v = 0; v < parent.size(); v++){
     //     cout << dist[v] << " ";
     // }
     // cout << endl; cin.get();
     list<Edge*> * path = new list<Edge*>();
     if(dist[vertex_dest] == 99999999) {cout << "NO PATH from: " << vertex_source << " to: " << vertex_dest << endl; return path;}
 
-    
+
     addToPath(parent, vertex_dest, path);
 
     // cout << "Path: " << path->size() << endl;
-    // for (int v = 0; v < path->size(); v++){ 
+    // for (int v = 0; v < path->size(); v++){
     //     cout << "(" << path->at(v)->vertex_a << "," << path->at(v)->vertex_b << ") ";
     // }
     // cout << endl;
     // cin.get();
-    // print the constructed 
-    // distance array 
-    // printSolution(dist, V, parent); 
+    // print the constructed
+    // distance array
+    // printSolution(dist, V, parent);
     return path;
 }
 
@@ -251,7 +255,7 @@ void Grafo::construct(vector<std::pair<int,int>> * pairs, vector<vector<int>*> *
         list<Edge*> * path = connectTwoVertexDijkstra(pivot, dest, this->adj);
         // cout << "Pair Added: <" << pivot << "," << dest << ">" << endl;
         pairs->erase(pairs->begin() + pairPos);
-        // for (int v = 0; v < path->size(); v++){ 
+        // for (int v = 0; v < path->size(); v++){
         //     cout << "(" << path->at(v)->vertex_a << "," << path->at(v)->vertex_b << ") ";
         // }
         // cin.get();
@@ -270,7 +274,7 @@ void Grafo::construct(vector<std::pair<int,int>> * pairs, vector<vector<int>*> *
         this->pushNugget(pivot, dest, path, this->edges->size());
         // printGraph();
         // cin.get();
-    
+
     }
 }
 
@@ -300,7 +304,7 @@ void Grafo::constructGrasp(vector<std::pair<int,int>> * pairs, RFWLocalRandom * 
         // cout << "Available pairs: " << endl;
         // for(int p = 0; p < pairs->size(); p++){
         //     cout << "<" << pairs->at(p).first << "," << pairs->at(p).second << "> ";
-        // }   
+        // }
         // cout<<endl;
         vector<list<Edge*> *> * orderedPath = new vector<list<Edge*> *>();
         vector<std::pair<int,int>> * orderedPairs = new vector<std::pair<int,int>>();
@@ -320,7 +324,7 @@ void Grafo::constructGrasp(vector<std::pair<int,int>> * pairs, RFWLocalRandom * 
             //     e++;
             // }
             // cout << endl;
-            
+
             double newCost = 0;
             it3 = new_path->begin();
             for(e = 0; e < new_path->size(); it3++){
@@ -333,7 +337,7 @@ void Grafo::constructGrasp(vector<std::pair<int,int>> * pairs, RFWLocalRandom * 
             }
             // cout << "PathCost: " << newCost << endl;
             // cin.get();
-            
+
             bool inserted = false;
             if(orderedPath->size() == 0){
                 orderedPath->push_back(new_path);
@@ -388,8 +392,8 @@ void Grafo::constructGrasp(vector<std::pair<int,int>> * pairs, RFWLocalRandom * 
             e++;
         }
         this->pushNugget(pairPos.first, pairPos.second, path, this->edges->size());
-        
-        
+
+
         // cin.get();
         delete orderedPath;
         delete orderedPairs;
@@ -406,7 +410,7 @@ void Grafo::GRASP(RFWLocalRandom * random, double alpha){
     for(int g = 0; g < terminals->size(); g++){
         vector<int> availableVertex;
         for(int t = 0; t < terminals->at(g)->size(); t++){
-            availableVertex.push_back(terminals->at(g)->at(t));    
+            availableVertex.push_back(terminals->at(g)->at(t));
         }
         while(availableVertex.size() > 1){
             int pivotPos = random->GetRand() % availableVertex.size();
@@ -425,7 +429,7 @@ void Grafo::GRASP(RFWLocalRandom * random, double alpha){
     // }
     // cout << endl;
     // cin.get();
-    constructGrasp(terminalToUse, random, alpha);    
+    constructGrasp(terminalToUse, random, alpha);
 }
 
 void Grafo::solveByPath(RFWLocalRandom * random, bool usePattern, vector<vector<int>*>* elem){
@@ -444,12 +448,12 @@ void Grafo::solveByPath(RFWLocalRandom * random, bool usePattern, vector<vector<
         // printGraph();
         // cin.get();
     }
-    
+
     vector<std::pair<int,int>> * terminalToUse = new vector<std::pair<int,int>>();
     for(int g = 0; g < terminals->size(); g++){
         vector<int> availableVertex;
         for(int t = 0; t < terminals->at(g)->size(); t++){
-            availableVertex.push_back(terminals->at(g)->at(t));    
+            availableVertex.push_back(terminals->at(g)->at(t));
         }
         while(availableVertex.size() > 1){
             int pivotPos = random->GetRand() % availableVertex.size();
@@ -476,7 +480,7 @@ void Grafo::solveByPath(RFWLocalRandom * random, bool usePattern, vector<vector<
 
 void Grafo::removeAndInsertPerturbation(int percentage, RFWLocalRandom * random){
 
-    
+
     int totalMoves = ceil(float(this->solution->size()) * (float)percentage/100.0);
     vector<std::pair<int,int>> removedPairs(totalMoves);
     int move = 0;
@@ -502,7 +506,7 @@ void Grafo::removeAndInsertPerturbation(int percentage, RFWLocalRandom * random)
         removedPairs[move] = pair;
         move++;
     }
-    
+
 
     // vector<vector<int>*> pAdj(this->V, new vector<int>(this->V, -1));
 
@@ -517,7 +521,7 @@ void Grafo::removeAndInsertPerturbation(int percentage, RFWLocalRandom * random)
     //             else{
     //                 pAdj[i]->at(j) = e->weight;
     //                 pAdj[j]->at(i) = e->weight;
-    //             }   
+    //             }
     //         }
     //     }
     // }
@@ -550,7 +554,7 @@ bool Grafo::removeEdgeLocalSearch(bool firstImprovement){
     }
     // auto end = std::chrono::system_clock::now();
     // std::chrono::duration<double> elapsed_seconds = end-start;
-    // cout << "Time to Build Current State: " << (double)elapsed_seconds.count() << endl; 
+    // cout << "Time to Build Current State: " << (double)elapsed_seconds.count() << endl;
     // start = std::chrono::system_clock::now();
     this->usedEdges->sort([](Edge * lhs, Edge * rhs) {return lhs->appearance < rhs->appearance;});
     list<Edge *>::iterator it = this->usedEdges->begin();
@@ -612,7 +616,7 @@ bool Grafo::removeEdgeLocalSearch(bool firstImprovement){
                 currentState->at(edge->vertex_a)->at(edge->vertex_b) = edge->weight;
                 currentState->at(edge->vertex_b)->at(edge->vertex_a) = edge->weight;
             }
-            
+
         }
         currentState->at(edgeToRemove->vertex_a)->at(edgeToRemove->vertex_b) = 10000;
         currentState->at(edgeToRemove->vertex_b)->at(edgeToRemove->vertex_a) = 10000;
@@ -686,9 +690,9 @@ bool Grafo::removeEdgeLocalSearch(bool firstImprovement){
     // elapsed_seconds = end-start;
     // cout << "Time to Check All UsedEdges: " << (double)elapsed_seconds.count() << endl;
     // cout << "Step1: " << step1 << endl;
-    // cout << "Step2: " << step2 << endl; 
-    // cout << "Step3: " << step3 << endl; 
-    
+    // cout << "Step2: " << step2 << endl;
+    // cout << "Step3: " << step3 << endl;
+
     delete currentState;
     if(improved){
         // start = std::chrono::system_clock::now();
@@ -730,7 +734,7 @@ bool Grafo::removeEdgeLocalSearch(bool firstImprovement){
         // cin.get();
         // end = std::chrono::system_clock::now();
         // elapsed_seconds = end-start;
-        // cout << "Time to Apply Improvement: " << (double)elapsed_seconds.count() << endl; 
+        // cout << "Time to Apply Improvement: " << (double)elapsed_seconds.count() << endl;
         // end = std::chrono::system_clock::now();
         // elapsed_seconds = end-totalTime;
         // cout << "Time to Finish LS: " << (double)elapsed_seconds.count() << endl;
@@ -738,7 +742,7 @@ bool Grafo::removeEdgeLocalSearch(bool firstImprovement){
     }
     // end = std::chrono::system_clock::now();
     // elapsed_seconds = end-totalTime;
-    // cout << "Time to Finish LS: " << (double)elapsed_seconds.count() << endl; 
+    // cout << "Time to Finish LS: " << (double)elapsed_seconds.count() << endl;
     // cout << "finished edge local search without improvement" << endl;
     return false;
 }
@@ -846,7 +850,7 @@ bool Grafo::relocateLocalSearch(){
         } else{
             delete new_path;
         }
-        
+
 
         for(int e = 0; e < edges->size(); e++){
             int vertex_a = edges->at(e)->vertex_a;
@@ -913,7 +917,7 @@ double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalE
         return (double)elapsed_seconds.count();
     }
     createSteinerForestAdj();
-    
+
     int pCost;
     bool BLimproved = true;
     bool tryEdge = false;
@@ -928,7 +932,7 @@ double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalE
             cout << "buscalocal_" << BLITers << " ";
             return (double)elapsed_seconds.count();
         }
-        
+
     }
 
     auto end = std::chrono::system_clock::now();
@@ -1014,7 +1018,7 @@ void Grafo::printGraph(){
     cout << "Used Edges:" << endl;
     for(unsigned int i = 0; i < edges->size(); i++){
         if(edges->at(i)->usedEdge)
-            cout << "(" << edges->at(i)->vertex_a << "," << edges->at(i)->vertex_b << ")[" << edges->at(i)->appearance << "] "; 
+            cout << "(" << edges->at(i)->vertex_a << "," << edges->at(i)->vertex_b << ")[" << edges->at(i)->appearance << "] ";
     }
     cout << endl;
 
@@ -1052,7 +1056,7 @@ void Grafo::printGraph(){
 
     for(unsigned int i = 0; i < edges->size(); i++){
         if(edges->at(i)->usedEdge){
-            cout << edges->at(i)->vertex_a << " -- " << edges->at(i)->vertex_b << " [label=\"" <<  edges->at(i)->weight << "\"]"  << ";" << endl; 
+            cout << edges->at(i)->vertex_a << " -- " << edges->at(i)->vertex_b << " [label=\"" <<  edges->at(i)->weight << "\"]"  << ";" << endl;
         }
     }
 
@@ -1111,13 +1115,13 @@ void Grafo::unUseEdge(Edge * e){
 }
 
 vector<vector<Edge*>*>* Grafo::getConnectedComponents(){
-    
+
     vector <vector <Edge*>*>* components = new vector<vector<Edge*>*>();
-    
+
     vector<Edge*>* group;
-    
+
     vector<Edge*>* availableEdges = new vector<Edge*>();
-    
+
     // for(int e = 0; e < usedEdges->size(); e++){
     //     availableEdges->push_back(usedEdges->at(e));
     // }
@@ -1129,7 +1133,7 @@ vector<vector<Edge*>*>* Grafo::getConnectedComponents(){
         group = new vector<Edge*>();
         vector<int> vertex;
         group->push_back(availableEdges->back());
-        
+
         vertex.push_back(availableEdges->back()->vertex_a);
         vertex.push_back(availableEdges->back()->vertex_b);
         // cout << "Pushed: " << availableEdges->back().vertex_a << "," << availableEdges->back().vertex_b << endl;
@@ -1160,7 +1164,7 @@ vector<vector<Edge*>*>* Grafo::getConnectedComponents(){
             if(vertex_b_in && !vertex_a_in){
                 vertex.push_back(edge->vertex_a);
             }
-            
+
             if(vertex_a_in || vertex_b_in){
                 // cout << "Added Edge: ("<<edge.vertex_a<<","<<edge.vertex_b<<")"<<endl;
                 group->push_back(edge);
@@ -1198,81 +1202,81 @@ vector<vector<Edge*>*>* Grafo::getConnectedComponents(){
     //     }
     //     cin.get();
     // }
-    
+
     return components;
 }
 
-int minKey(int key[], bool mstSet[], int V)  
-{  
-    // Initialize min value  
-    int min = INT_MAX, min_index;  
-  
-    for (int v = 0; v < V; v++)  
-        if (mstSet[v] == false && key[v] < min)  
-            min = key[v], min_index = v;  
-  
-    return min_index;  
-}  
-   
-void printMST(vector<int> parent, vector<vector<int>> graph, int V)  
-{  
-    cout<<"Edge \tWeight\n";  
-    for (int i = 1; i < V; i++)  
-        cout<<parent[i]<<" - "<<i<<" \t"<<graph[i][parent[i]]<<" \n";  
-}  
-  
-vector<int> primMST(vector<vector<int>> graph, int V)  
-{  
-    // Array to store constructed MST  
-    vector<int> parent(V);  
-      
-    // Key values used to pick minimum weight edge in cut  
-    int key[V];  
-      
-    // To represent set of vertices not yet included in MST  
-    bool mstSet[V];  
-  
-    // Initialize all keys as INFINITE  
-    for (int i = 0; i < V; i++)  
-        key[i] = INT_MAX, mstSet[i] = false;  
-  
-    // Always include first 1st vertex in MST.  
-    // Make key 0 so that this vertex is picked as first vertex.  
-    key[0] = 0;  
-    parent[0] = -1; // First node is always root of MST  
-  
-    // The MST will have V vertices  
-    for (int count = 0; count < V - 1; count++) 
-    {  
-        // Pick the minimum key vertex from the  
-        // set of vertices not yet included in MST  
-        int u = minKey(key, mstSet, V);  
-  
-        // Add the picked vertex to the MST Set  
-        mstSet[u] = true;  
-  
-        // Update key value and parent index of  
-        // the adjacent vertices of the picked vertex.  
-        // Consider only those vertices which are not  
-        // yet included in MST  
-        for (int v = 0; v < V; v++)  
-  
-            // graph[u][v] is non zero only for adjacent vertices of m  
-            // mstSet[v] is false for vertices not yet included in MST  
-            // Update the key only if graph[u][v] is smaller than key[v]  
-            if (graph[u][v] && mstSet[v] == false && graph[u][v] < key[v])  
-                parent[v] = u, key[v] = graph[u][v];  
-    }  
-  
-    // print the constructed MST  
-    // printMST(parent, graph, V);  
+int minKey(int key[], bool mstSet[], int V)
+{
+    // Initialize min value
+    int min = INT_MAX, min_index;
+
+    for (int v = 0; v < V; v++)
+        if (mstSet[v] == false && key[v] < min)
+            min = key[v], min_index = v;
+
+    return min_index;
+}
+
+void printMST(vector<int> parent, vector<vector<int>> graph, int V)
+{
+    cout<<"Edge \tWeight\n";
+    for (int i = 1; i < V; i++)
+        cout<<parent[i]<<" - "<<i<<" \t"<<graph[i][parent[i]]<<" \n";
+}
+
+vector<int> primMST(vector<vector<int>> graph, int V)
+{
+    // Array to store constructed MST
+    vector<int> parent(V);
+
+    // Key values used to pick minimum weight edge in cut
+    int key[V];
+
+    // To represent set of vertices not yet included in MST
+    bool mstSet[V];
+
+    // Initialize all keys as INFINITE
+    for (int i = 0; i < V; i++)
+        key[i] = INT_MAX, mstSet[i] = false;
+
+    // Always include first 1st vertex in MST.
+    // Make key 0 so that this vertex is picked as first vertex.
+    key[0] = 0;
+    parent[0] = -1; // First node is always root of MST
+
+    // The MST will have V vertices
+    for (int count = 0; count < V - 1; count++)
+    {
+        // Pick the minimum key vertex from the
+        // set of vertices not yet included in MST
+        int u = minKey(key, mstSet, V);
+
+        // Add the picked vertex to the MST Set
+        mstSet[u] = true;
+
+        // Update key value and parent index of
+        // the adjacent vertices of the picked vertex.
+        // Consider only those vertices which are not
+        // yet included in MST
+        for (int v = 0; v < V; v++)
+
+            // graph[u][v] is non zero only for adjacent vertices of m
+            // mstSet[v] is false for vertices not yet included in MST
+            // Update the key only if graph[u][v] is smaller than key[v]
+            if (graph[u][v] && mstSet[v] == false && graph[u][v] < key[v])
+                parent[v] = u, key[v] = graph[u][v];
+    }
+
+    // print the constructed MST
+    // printMST(parent, graph, V);
     return parent;
-}  
+}
 
 vector<vector<int>> createPrimGraph(vector<int> vertex, vector<Edge*>* e){
 
     vector<vector<int>> primGraph;
-    
+
 
     // cout << "Present Vertex: ";
     // for(int i = 0; i < vertex.size(); i++){
@@ -1285,8 +1289,8 @@ vector<vector<int>> createPrimGraph(vector<int> vertex, vector<Edge*>* e){
         vector<int> line;
         for(int j = 0; j< vertex.size(); j++){
             int originalVertex_b = vertex[j];
-            if(i == j){ 
-                line.push_back(0); 
+            if(i == j){
+                line.push_back(0);
             } else{
                 bool added = false;
                 for(int x = 0; x < e->size(); x++){
@@ -1337,11 +1341,11 @@ void Grafo::removeCiclesWithPrim(vector<vector<Edge*>*>* components){
         // }
         // cin.get();
         vector<int> parents = primMST(primGraph, primGraph.size());
-        
+
         for(int edge = 0; edge < e->size(); edge++){
             // cout << "Edge: (" << e->at(edge)->vertex_a << "," << e->at(edge)->vertex_b << ")" << endl;
             // cin.get();
-            bool trimmed = true;            
+            bool trimmed = true;
             for(int v = 0; v < parents.size(); v++){
                 int vertex_a = vertex[v];
                 int vertex_b = vertex[parents[v]];
@@ -1363,7 +1367,7 @@ void Grafo::removeCiclesWithPrim(vector<vector<Edge*>*>* components){
 
 int Grafo::getSolutionCost(){
     int cost = 0;
-    
+
     list<Edge *>::iterator it = usedEdges->begin();
     int i = 0;
     for(i = 0; i < usedEdges->size(); it++){
@@ -1375,7 +1379,7 @@ int Grafo::getSolutionCost(){
     return cost;
 }
 
-    
+
 void Grafo::addEdge(int id, int vertex_a, int vertex_b, double weight){
     id = edges->size();
     Edge * newEdge = new Edge(id, vertex_a, vertex_b, weight);

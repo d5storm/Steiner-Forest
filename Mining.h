@@ -7,13 +7,13 @@
 #include "Forest_Steiner.hpp"
 
 class Pattern{
-			public:	
-				// int* elements, *usage;	// 
+			public:
+				// int* elements, *usage;	//
 				vector<vector<int>*> * elements;
 				int support, size;
 				Pattern(){ elements = new vector<vector<int>*>(); support = 0; size = 0;};
-				~Pattern(){delete[] elements;}; 
-				// // Assignment operator overload 
+				~Pattern(){delete[] elements;};
+				// // Assignment operator overload
 				// Pattern &operator=(const Pattern &other) {
 				// 	support = other.support;
 				// 	size = other.size;
@@ -27,7 +27,7 @@ class Pattern{
 
 class Mining{
 
-	private:	
+	private:
 		int nPatterns,sizeES,maxSizeES, min_sup, min_sup_orig, worstCostPos, currentPattern, gamma;
 		double worstCostES;
 		vector<Pattern*> * listOfPatterns;		// Lista de padroes minerados pelo FPmax
@@ -35,21 +35,21 @@ class Mining{
 		bool eschanged,mined;
 		int iterWNC, numberMine;
 		RFWLocalRandom * random;
-		
-		
-	
-	
+
+
+
+
 	public:
 
-		
+
 		Mining();
 		Mining(int _tamCE, int _suporte, int _gamma, RFWLocalRandom * random);
 		~Mining();
-		void mine(int = 10);	
+		void mine(int = 10);
 		void map_file();
 		void unmapall_file(int n);
 		void printPatterns();
-		
+		void printParsedPatterns();
 		///// Manipula Conjunto Elite
 		void printES();
 		bool updateES(Grafo * s);
@@ -64,11 +64,11 @@ class Mining{
 		int getNumberOfMine() {return numberMine;};
 		int getNumberOfPatterns() {return nPatterns;};
 		int getSupport() {return min_sup_orig;};
-		
+
 		///// Manipula padrões
 		void nextPattern(){(currentPattern < nPatterns -1 ) ? (currentPattern++) : (currentPattern = 0); }
 		Pattern* getCurrentPattern() { return listOfPatterns->at(currentPattern);};
-		
+
 };
 
 
