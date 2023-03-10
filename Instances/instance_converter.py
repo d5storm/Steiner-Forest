@@ -45,12 +45,41 @@ def ghalami_to_luidi():
                         EDGES += line
                 elif not EOF and split_line[1].strip().lower() == "terminals":
                     terminals_read = True
-                    terminals = int(int(fp.readline().split(" ")[1]) / 2)
-                    for _ in range(terminals):
-                        split_terminals = fp.readline().split(" ")
+                    S = int(int(fp.readline().strip().split(" ")[1]) / 2)
+                    terminal_pair = []
+                    terminal_groups = []
+                    for _ in range(S):
+                        split_terminals = fp.readline().strip().split(" ")
                         terminal_a = int(split_terminals[1]) - 1
                         terminal_b = int(split_terminals[2]) - 1
+                        terminal_pair.append((terminal_a, terminal_b))
                         terminals_list += f"S {terminal_a} {terminal_b}\n"
+
+                    initial_pair = terminal_pair.pop()
+                    terminal_group = [initial_pair[0], initial_pair[1]]
+                    terminal_groups.append(terminal_group)
+                    # joining terminal pair ends
+                    terminal_group_index = 0
+                    while len(terminal_pair) > 0:
+                        added = False
+                        for p in range(len(terminal_pair)):
+                            vertex_a = terminal_pair[p][0]
+                            vertex_b = terminal_pair[p][1]
+                            if vertex_a in terminal_groups[terminal_group_index]:
+                                terminal_pair.pop(p)
+                                terminal_groups[terminal_group_index].append(vertex_b)
+                                added = True
+                                break
+                            if vertex_b in terminal_groups[terminal_group_index]:
+                                terminal_pair.pop(p)
+                                terminal_groups[terminal_group_index].append(vertex_a)
+                                added = True
+                                break
+                        if not added:
+                            new_group_starting_pair = terminal_pair.pop()
+                            terminal_group = [new_group_starting_pair[0], new_group_starting_pair[1]]
+                            terminal_groups.append(terminal_group)
+                            terminal_group_index += 1
 
         new_file_name = f"{file_name.split('.')[0]}_sft.{file_name.split('.')[1]}"
 
@@ -59,7 +88,14 @@ def ghalami_to_luidi():
         with open(path, "w") as fp2:
             fp2.write(f"N {NODES}\n")
             fp2.write(EDGES)
-            fp2.write(terminals_list)
+            for groups in terminal_groups:
+                fp2.write("S ")
+                for terminal in range(len(groups)):
+                    if terminal == len(groups) - 1:
+                        fp2.write("{}".format(groups[terminal]))
+                    else:
+                        fp2.write("{} ".format(groups[terminal]))
+                fp2.write("\n")
 
 
 def create_random_terminal_sets(terminals_list, tree=False):
@@ -387,4 +423,4 @@ def converter():
 
 
 if __name__ == "__main__":
-    convert_to_luidi()
+    ghalami_to_luidi()
