@@ -34,6 +34,8 @@ class Mining{
 		vector<Grafo*> * ES;    		// lista das melhores solucoes
 		bool eschanged,mined;
 		int iterWNC, numberMine;
+		int biggestPattern = 0;
+		int smallestPattern = 10000;
 		RFWLocalRandom * random;
 
 
@@ -64,6 +66,8 @@ class Mining{
 		int getNumberOfMine() {return numberMine;};
 		int getNumberOfPatterns() {return nPatterns;};
 		int getSupport() {return min_sup_orig;};
+		int getBiggestPattern() {return biggestPattern;}
+		int getSmallestPattern() {return smallestPattern;}
 
 		///// Manipula padrões
 		void nextPattern(){(currentPattern < nPatterns -1 ) ? (currentPattern++) : (currentPattern = 0); }

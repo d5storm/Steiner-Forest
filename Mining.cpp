@@ -141,6 +141,12 @@ void Mining::unmapall_file(int n){
 		}
 		// cout << endl;
 		listOfPatterns->at(nPatterns++) = p;
+		if(p->size < this->smallestPattern)
+			this->smallestPattern = p->size;
+		
+		if(p->size > this->biggestPattern)
+			this->biggestPattern = p->size;
+
 		r = fscanf(fp, "%d;%d;", &tam, &supp);
 		p = new Pattern();
 		p->support = supp;
@@ -184,9 +190,11 @@ bool Mining::updateES(Grafo * s){
 				}
 			}
 			// cout << "1" << endl;
+			Grafo * oldSol = ES->at(worstCostPos);
 			// delete ES->at(worstCostPos);
 			// cout << "2" << endl;
 			ES->at(worstCostPos) = s;
+			delete oldSol;
 		}
 		// ES worst cost must be updated
 

@@ -112,6 +112,7 @@ public:
     int totalUsedEdges() { return usedEdges->size();}
     int patternSize() { return usedPatternSize; }
     int getSolutionCost();
+    int getTotalTerminals() {return this->terminals->size();}
     bool isFeasible(){
         return detectCicle() && checkTerminalsMeet()?true:false;
     }

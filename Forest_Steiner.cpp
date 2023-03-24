@@ -110,6 +110,7 @@ Grafo::Grafo(string path){
         }
     }
     // gFinal->printGraph();
+    E = edges->size();
     // cin.get();
     file.close();
 }
@@ -467,6 +468,7 @@ void Grafo::solveByPath(RFWLocalRandom * random, bool usePattern, vector<vector<
         }
     }
     construct(terminalToUse, this->adj, random);
+    // cout << "constructed" << endl;
     if(usePattern)
         clearUnusedPatternEdges();
 
@@ -908,15 +910,18 @@ bool Grafo::relocateLocalSearch(){
 
 double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalEdgeLS, double alpha, bool usePattern, vector<vector<int>*> * elem, bool useTarget, int target){
     auto start = std::chrono::system_clock::now();
+    // cout << "solving by path" << endl;
     solveByPath(random, usePattern, elem);
     if (useTarget && this->getSolutionCost() <= target){
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed_seconds = end-start;
         createSteinerForestAdj();
-        cout << "construtivo" << " ";
+        // cout << "construtivo" << " ";
         return (double)elapsed_seconds.count();
     }
     createSteinerForestAdj();
+
+    // cout << "constructor finished!" << endl;
 
     int pCost;
     bool BLimproved = true;
@@ -929,7 +934,7 @@ double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalE
             auto end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed_seconds = end-start;
             createSteinerForestAdj();
-            cout << "buscalocal_" << BLITers << " ";
+            // cout << "buscalocal_" << BLITers << " ";
             return (double)elapsed_seconds.count();
         }
 

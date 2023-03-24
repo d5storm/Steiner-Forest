@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
     bool useTarget = false;
     if (target > 0) {
         useTarget = true;
+        // cout << "Use Target: " << target << endl;
     }
 
     // if(stableDM)
@@ -62,7 +63,7 @@ int main(int argc, char *argv[]) {
     bool useTime = false;
     if(execTime != -1 && !useTarget)
         useTime = true;
-    else if(algIter != -1)
+    if(algIter != -1)
         useIter = true;
 
     int bestSol = INT_MAX;
@@ -73,23 +74,24 @@ int main(int argc, char *argv[]) {
     int avgSolSize = 0;
     int avgPatternSize = 0;
     int iter = 0;
-    Grafo * best = new Grafo(argv[1]);
-
-    // cout << "SEED: " << seed << " INSTANCE: " << argv[1] << endl;
-
+    Grafo * best = NULL;
 
 
     int iterBestFound = -1;
     int totalEdgeLS = 0;
-
     bool mined = false;
     int miningIters = 0;
     if (DM && useIter == -1){
         cout << "NUMERO DE ITER NAO INSERIDO" << endl;
         exit(1);
     }
-    cout << argv[1] << " ";
+
+    cout << argv[1] << endl;
+    // cout << stableDM << endl;
+    // cout << DM << endl;
+    // exit(1);
     while(checkTime(useTime, totalTime, execTime) && checkiter(useIter, iter, algIter)){
+        // cout << iter << endl;
         if(DM && !stableDM && (iter == algIter / 2 )){
             mminer->map_file();
             mminer->mine();
@@ -114,13 +116,22 @@ int main(int argc, char *argv[]) {
                 mminer->mine();
                 mminer->unmapall_file(best->V);
                 mined = true;
+                // cout << "1 ";
             }
+            // else
+                // cout << "0 ";
         } else{
             // cout << "deu ruim" << endl;
+            
         }
         bool solToES = false;
+        // cout << "lendo grafo" << endl;
         Grafo * testLuidi = new Grafo(argv[1]);
+        // cout << testLuidi->V << " " << testLuidi->E << " " << testLuidi->getTotalTerminals() << endl;
+        // return -1;
+        // cout << "solving luidi" << endl;
         if(!DM || !mined){
+            // cout << "!DM || !mined" << endl;
             totalTime += testLuidi->solveLuidi(random, 0, &totalEdgeLS, alpha, false, NULL, useTarget, target);
         } else{
             miningIters += 1;
@@ -132,17 +143,19 @@ int main(int argc, char *argv[]) {
             cout << "Luidi UnFeasible!" << endl;
             exit(-1);
         }
+        // cout << "resolveu!" << endl;
         if(DM){
             if(!mined || (mined && stableDM)){
                bool updated = mminer->updateES(testLuidi);
-                // if(updated)
-                //     cout << "ES UPDATED!" << endl;
+                if(!updated)
+                    delete testLuidi;
+                    // cout << "ES UPDATED!" << endl;
                 // else
                 //     cout << "ES NOT UPDATED!" << endl;
             }
 		}
         if(useTarget && testLuidi->getSolutionCost() <= target){
-            cout << iter << " " << totalTime << " " << testLuidi->getSolutionCost() << " " << target << " " << execTime << endl;
+            cout << iter << " " << totalTime << " " << testLuidi->getSolutionCost() << " " << target << " " << endl;
             // cin.get();
             return 0;
         }
@@ -154,50 +167,20 @@ int main(int argc, char *argv[]) {
             iterBestFound = iter;
         }
         iter++;
+        // cout << "iter somado!" << endl;
         avgPatternSize += testLuidi->patternSize();
         avgSolSize += testLuidi->totalUsedEdges();
         // cout << "SolSize: " << testLuidi->totalUsedEdges() << endl;
+        cout << "0" << " " << iter << " " << totalTime << " " << bestSol << endl;
     }
+    // For Usual Result!
+    // cout << bestSol << " " << totalTime << " " << mminer->getBiggestPattern() << " " << mminer->getSmallestPattern() << endl;
 
-    // cout << "Final Mining" << endl;
-    // mminer->map_file();
-    // mminer->mine();
-    // mminer->unmapall_file(best->V);
-    // mminer->printParsedPatterns();
-
-
-    // cout << "1" << endl;
-    // cout << best->totalUsedEdges() << endl;
-    // int printed_edges= 0;
-    // for (int e = 0; e < best->E; e++){
-    //     Edge * edge = best->getEdge(e);
-    //     if(edge->usedEdge){
-    //         int vertex_a = edge->vertex_a + 1;
-	// 		int vertex_b = edge->vertex_b + 1;
-	// 		cout << "x";
-	// 		string code = to_string(vertex_a) + "_" + to_string(vertex_b);
-	// 		if (vertex_a > vertex_b)
-	// 			code = to_string(vertex_b) + "_" + to_string(vertex_a);
-	// 		int total_chars = 1 + code.size();
-	// 		for (int size = 0; size < (16 - total_chars); size++){
-	// 			cout << "_";
-	// 		}
-	// 		cout << code << endl;
-    //         printed_edges++;
-    //     }
-    //     if (printed_edges == best->totalUsedEdges())
-    //         break;
-    // }
-    cout << totalTime << endl;
-
-    // cin.get();
-    // cout << "EdgeLS: " << totalEdgeLS << endl;
-    // cout << " " << iterBestFound << " " << bestSol << " " << totalTime << endl;
-    // cout << "0 " << bestSol << " " << totalTime << endl;
-    // cout << "Total Iterations: " << iter << " Total Mined Iters: " << miningIters << " BestSol Size: " << bestSolSize;
-    // cout << " BestSol Pattern Size: " << bestSolPatternSize << " Avg. Sol Size: " << ((double) avgSolSize) / iter;
-    // cout << " Avg. Pattern Size: " << ((double) avgPatternSize) / miningIters << endl;
-    // cin.get();
+    // For Target Reaching!
+    // cout << iter << " " << totalTime << " " << best->getSolutionCost() << " " << target << " " << endl;
+    
+    // For Irace!
+    // cout << bestSol << endl;
     return 0;
 
 }

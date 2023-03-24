@@ -7,8 +7,23 @@
 
 # Empty lines and comments are ignored.
 
-
-jmp-n-500-a-200-p-025-k-35-s-5192.dat
-jmp-n-100-a-200-p-050-k-15-s-4911.dat
-c07.dat
-c08.dat
+i080-044_sft.stp
+i080-244_sft.stp
+i080-345_sft.stp
+i160-043_sft.stp
+i160-213_sft.stp
+i160-313_sft.stp
+i160-343_sft.stp
+i320-014_sft.stp
+i320-212_sft.stp
+i320-305_sft.stp
+i320-342_sft.stp
+i640-024_sft.stp
+i640-123_sft.stp
+i640-215_sft.stp
+i640-322_sft.stp
+lin18_sft.stp
+lin37_sft.stp
+wrp3-52_sft.stp
+wrp3-88_sft.stp
+wrp4-54_sft.stp
