@@ -912,6 +912,8 @@ double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalE
     auto start = std::chrono::system_clock::now();
     // cout << "solving by path" << endl;
     solveByPath(random, usePattern, elem);
+    std::chrono::duration<double> elapsed_seconds_cons = std::chrono::system_clock::now() - start;
+    cout << " Time Cons: " << (double)elapsed_seconds_cons.count();
     if (useTarget && this->getSolutionCost() <= target){
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed_seconds = end-start;
@@ -927,6 +929,7 @@ double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalE
     bool BLimproved = true;
     bool tryEdge = false;
     int BLITers = 0;
+    auto start_bl = std::chrono::system_clock::now();
     while(BLimproved){
         BLimproved = removeEdgeLocalSearch(true);
         BLITers++;
@@ -937,9 +940,9 @@ double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalE
             // cout << "buscalocal_" << BLITers << " ";
             return (double)elapsed_seconds.count();
         }
-
     }
-
+    std::chrono::duration<double> elapsed_seconds_bl = std::chrono::system_clock::now() - start_bl;
+    cout << " Time BL: " << (double)elapsed_seconds_bl.count() << endl;
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
     createSteinerForestAdj();

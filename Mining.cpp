@@ -143,9 +143,10 @@ void Mining::unmapall_file(int n){
 		listOfPatterns->at(nPatterns++) = p;
 		if(p->size < this->smallestPattern)
 			this->smallestPattern = p->size;
-		
-		if(p->size > this->biggestPattern)
+
+		if(p->size > this->biggestPattern){
 			this->biggestPattern = p->size;
+		}
 
 		r = fscanf(fp, "%d;%d;", &tam, &supp);
 		p = new Pattern();
@@ -224,25 +225,21 @@ void Mining::printES(){
 	}
 }
 
-void Mining::printParsedPatterns(){
-	cout << getNumberOfPatterns() << endl;
-	for(int i = 0; i < getNumberOfPatterns(); i++){
-		Pattern * pattern = getCurrentPattern();
-		nextPattern();
-		cout << pattern->size << endl;
-		for(int j = 0; j < pattern->size; j++){
-			int vertex_a = pattern->elements->at(j)->at(0) + 1;
-			int vertex_b = pattern->elements->at(j)->at(1) + 1;
-			cout << "x";
-			string code = to_string(vertex_a) + "_" + to_string(vertex_b);
-			if (vertex_a > vertex_b)
-				code = to_string(vertex_b) + "_" + to_string(vertex_a);
-			int total_chars = 1 + code.size();
-			for (int size = 0; size < (16 - total_chars); size++){
-				cout << "_";
-			}
-			cout << code << endl;
+void Mining::printParsedPatterns(RFWLocalRandom * random){
+	Pattern * pattern = getRandomPattern(random);
+	cout << pattern->size << endl;
+	for(int j = 0; j < pattern->size; j++){
+		int vertex_a = pattern->elements->at(j)->at(0) + 1;
+		int vertex_b = pattern->elements->at(j)->at(1) + 1;
+		cout << "x";
+		string code = to_string(vertex_a) + "_" + to_string(vertex_b);
+		if (vertex_a > vertex_b)
+			code = to_string(vertex_b) + "_" + to_string(vertex_a);
+		int total_chars = 1 + code.size();
+		for (int size = 0; size < (16 - total_chars); size++){
+			cout << "_";
 		}
+		cout << code << endl;
 	}
 }
 

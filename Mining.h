@@ -35,6 +35,7 @@ class Mining{
 		bool eschanged,mined;
 		int iterWNC, numberMine;
 		int biggestPattern = 0;
+		int biggestPatternPos = -1;
 		int smallestPattern = 10000;
 		RFWLocalRandom * random;
 
@@ -51,7 +52,7 @@ class Mining{
 		void map_file();
 		void unmapall_file(int n);
 		void printPatterns();
-		void printParsedPatterns();
+		void printParsedPatterns(RFWLocalRandom * random);
 		///// Manipula Conjunto Elite
 		void printES();
 		bool updateES(Grafo * s);
@@ -72,6 +73,10 @@ class Mining{
 		///// Manipula padrões
 		void nextPattern(){(currentPattern < nPatterns -1 ) ? (currentPattern++) : (currentPattern = 0); }
 		Pattern* getCurrentPattern() { return listOfPatterns->at(currentPattern);};
+		Pattern* getPattern(int pos) { return listOfPatterns->at(pos);};
+		Pattern* getRandomPattern(RFWLocalRandom * random) {
+			int randomPos = random->GetRand() % getNumberOfPatterns();
+			return listOfPatterns->at(randomPos);};
 
 };
 

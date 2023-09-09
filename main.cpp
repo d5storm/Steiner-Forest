@@ -86,12 +86,12 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    cout << argv[1] << endl;
+    // cout << argv[1] << endl;
     // cout << stableDM << endl;
     // cout << DM << endl;
     // exit(1);
     while(checkTime(useTime, totalTime, execTime) && checkiter(useIter, iter, algIter)){
-        // cout << iter << endl;
+        cout << iter;
         if(DM && !stableDM && (iter == algIter / 2 )){
             mminer->map_file();
             mminer->mine();
@@ -116,13 +116,13 @@ int main(int argc, char *argv[]) {
                 mminer->mine();
                 mminer->unmapall_file(best->V);
                 mined = true;
-                // cout << "1 ";
+                cout << " 1 ";
             }
-            // else
-                // cout << "0 ";
+            else
+                cout << " 0 ";
         } else{
             // cout << "deu ruim" << endl;
-            
+
         }
         bool solToES = false;
         // cout << "lendo grafo" << endl;
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
             }
 		}
         if(useTarget && testLuidi->getSolutionCost() <= target){
-            cout << iter << " " << totalTime << " " << testLuidi->getSolutionCost() << " " << target << " " << endl;
+            // cout << iter << " " << totalTime << " " << testLuidi->getSolutionCost() << " " << target << " " << endl;
             // cin.get();
             return 0;
         }
@@ -171,14 +171,21 @@ int main(int argc, char *argv[]) {
         avgPatternSize += testLuidi->patternSize();
         avgSolSize += testLuidi->totalUsedEdges();
         // cout << "SolSize: " << testLuidi->totalUsedEdges() << endl;
-        cout << "0" << " " << iter << " " << totalTime << " " << bestSol << endl;
+        // cout << "0" << " " << iter << " " << totalTime << " " << bestSol << endl;
     }
+
+    // For pattern extraction
+    // mminer->map_file();
+    // mminer->mine();
+    // mminer->unmapall_file(best->V);
+    // mminer->printParsedPatterns(random);
+
     // For Usual Result!
     // cout << bestSol << " " << totalTime << " " << mminer->getBiggestPattern() << " " << mminer->getSmallestPattern() << endl;
 
     // For Target Reaching!
     // cout << iter << " " << totalTime << " " << best->getSolutionCost() << " " << target << " " << endl;
-    
+
     // For Irace!
     // cout << bestSol << endl;
     return 0;

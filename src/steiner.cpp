@@ -3,7 +3,7 @@ Algorithm for Steiner Problem in Graphs
 
 Copyright (c) Microsoft Corporation
 
-All rights reserved. 
+All rights reserved.
 
 MIT License
 
@@ -17,7 +17,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "spgsolver.h"
+// #include "spgsolver.h"
 
 int main (int argc, char **argv) {
 	// SPGSolver::Solve(argc, argv);

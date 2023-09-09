@@ -304,12 +304,15 @@ def convert_to__steiner_forest_instance():
                 fp2.write(f"{terminals[-1]}\n")
 
 
-def convert_to_luidi():
+def convert_to_luidi(linux=False):
+    separator = "\\"
+    if linux:
+        separator = "/"
     original_instances_dir = sys.argv[1]
     new_instances_dir = sys.argv[2]
 
     for file_name in os.listdir(original_instances_dir):
-        path = "{}\\{}".format(original_instances_dir, file_name)
+        path = "{}{}{}".format(original_instances_dir, separator, file_name)
         with open(path) as fp:
             N = fp.readline().split(" ")[1].strip()
             E_number = 0
@@ -329,7 +332,7 @@ def convert_to_luidi():
                     for i in range(1, len(split_line) - 1):
                         S.append(f"{int(split_line[i]) + 1} {int(split_line[i + 1].strip()) + 1}")
 
-            path_new = "{}\\{}".format(new_instances_dir, file_name)
+            path_new = "{}{}{}".format(new_instances_dir, separator, file_name)
             with open(path_new, "w") as fp2:
                 fp2.write(f"{N} {E_number}\n")
                 fp2.write(E)
@@ -423,4 +426,4 @@ def converter():
 
 
 if __name__ == "__main__":
-    ghalami_to_luidi()
+    convert_to_luidi(linux=True)
