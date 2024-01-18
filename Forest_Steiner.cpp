@@ -913,7 +913,7 @@ double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalE
     // cout << "solving by path" << endl;
     solveByPath(random, usePattern, elem);
     std::chrono::duration<double> elapsed_seconds_cons = std::chrono::system_clock::now() - start;
-    cout << " Time Cons: " << (double)elapsed_seconds_cons.count();
+    // cout << " Time Cons: " << (double)elapsed_seconds_cons.count();
     if (useTarget && this->getSolutionCost() <= target){
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed_seconds = end-start;
@@ -942,7 +942,7 @@ double Grafo::solveLuidi(RFWLocalRandom * random, int perturbation, int * totalE
         }
     }
     std::chrono::duration<double> elapsed_seconds_bl = std::chrono::system_clock::now() - start_bl;
-    cout << " Time BL: " << (double)elapsed_seconds_bl.count() << endl;
+    // cout << " Time BL: " << (double)elapsed_seconds_bl.count() << endl;
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
     createSteinerForestAdj();

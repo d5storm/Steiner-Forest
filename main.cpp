@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
     // cout << DM << endl;
     // exit(1);
     while(checkTime(useTime, totalTime, execTime) && checkiter(useIter, iter, algIter)){
-        cout << iter;
+        // cout << iter;
         if(DM && !stableDM && (iter == algIter / 2 )){
             mminer->map_file();
             mminer->mine();
@@ -116,10 +116,10 @@ int main(int argc, char *argv[]) {
                 mminer->mine();
                 mminer->unmapall_file(best->V);
                 mined = true;
-                cout << " 1 ";
+                // cout << " 1 ";
             }
-            else
-                cout << " 0 ";
+            // else
+                // cout << " 0 ";
         } else{
             // cout << "deu ruim" << endl;
 
@@ -175,10 +175,11 @@ int main(int argc, char *argv[]) {
     }
 
     // For pattern extraction
-    // mminer->map_file();
-    // mminer->mine();
-    // mminer->unmapall_file(best->V);
-    // mminer->printParsedPatterns(random);
+    cout << bestSol << endl;
+    mminer->map_file();
+    mminer->mine();
+    mminer->unmapall_file(best->V);
+    mminer->printParsedPatterns(random);
 
     // For Usual Result!
     // cout << bestSol << " " << totalTime << " " << mminer->getBiggestPattern() << " " << mminer->getSmallestPattern() << endl;
