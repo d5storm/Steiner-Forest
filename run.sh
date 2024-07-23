@@ -20,7 +20,7 @@ execpath="./bin/heuristic"
 instances="./Instances/plots_mining_effects/*"
 # instances="./Instances/SteinForestLibrary/solved/*"
 # instances="./Instances/time_plots/instances/*"
-instances="./Instances/SteinForestLibrary/temp/*"
+instances="./Instances/hard_instances/*"
 declare -a support=(2)
 declare -a gamma=(13)
 declare -a eliteSetSize=(10)
@@ -44,21 +44,21 @@ for file in $instances
 do
 	# IFS="/"
 	readarray -d / -t split <<< $file
-	filename=${split[4]}
+	filename=${split[3]}
 	readarray -d . -t namesplit <<< ${filename}
 	name=${namesplit[0]}
 	# IFS="."
 	# readarray -d . -t split <<< $name
 	# cleanname=${split[0]}
 	echo $file
-	for ((  s = 1 ;  s <= 10;  s++  ))
+	for ((  s = 1 ;  s <= 5;  s++  ))
 	do
 		for g in "${gamma[@]}"
 		do
 			# target=${grasp_target[targetPos]}
 			# time=${execTime[timePos]}
-			# echo ./results/pattern_extraction/${name}_${s}.pattern
-			EXEC $execpath $file $s -1 200 10 2 -1 true true $g -1 >> ./results/pattern_extraction/${name}_${s}.pattern
+			echo ./results/pattern_extraction/${name}_${s}.pattern
+			EXEC $execpath $file $s -1 -1 10 2 1200 true true $g -1 >> ./results/pattern_extraction_1200s/${name}_${s}.pattern
 			# EXEC $execpath $file $s -1 200 10 2 -1 false false $g -1 >> ./results/plots_mining_effects/$filename
 		done
 	done

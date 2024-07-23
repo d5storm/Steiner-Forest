@@ -226,7 +226,8 @@ void Mining::printES(){
 }
 
 void Mining::printParsedPatterns(RFWLocalRandom * random){
-	Pattern * pattern = getRandomPattern(random);
+	// Pattern * pattern = getRandomPattern(random);
+	Pattern * pattern = getCurrentPattern();
 	cout << pattern->size << endl;
 	for(int j = 0; j < pattern->size; j++){
 		int vertex_a = pattern->elements->at(j)->at(0) + 1;

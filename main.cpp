@@ -179,6 +179,7 @@ int main(int argc, char *argv[]) {
     mminer->map_file();
     mminer->mine();
     mminer->unmapall_file(best->V);
+    cout << totalTime << endl;
     mminer->printParsedPatterns(random);
 
     // For Usual Result!
